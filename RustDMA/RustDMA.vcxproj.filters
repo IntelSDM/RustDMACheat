@@ -24,18 +24,12 @@
     <ClCompile Include="Memory\DMAHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SDK\HeaderMaster.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Misc\Pch\Pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Memory\DMAHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SDK\UnrealEngine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

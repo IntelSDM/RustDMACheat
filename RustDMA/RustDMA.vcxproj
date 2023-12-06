@@ -170,12 +170,10 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Memory\DMAHandler.cpp" />
     <ClCompile Include="Misc\Pch\Pch.cpp" />
-    <ClCompile Include="SDK\HeaderMaster.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Memory\DMAHandler.h" />
     <ClInclude Include="Misc\Pch\Pch.h" />
-    <ClInclude Include="SDK\UnrealEngine.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
