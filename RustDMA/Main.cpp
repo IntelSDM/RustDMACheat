@@ -24,7 +24,7 @@ void main()
 	}
 	std::printf("PID: 0x%X\n", TargetProcess.GetPID());
 	TargetProcess.FixDTB();
-	std::printf("Base Address: 0x%llX\n", TargetProcess.GetBaseAddress());
+	std::printf("Base Address: %X\n", TargetProcess.GetBaseAddress());
 	std::printf("Game Assembly: 0x%X\n", TargetProcess.GetModuleAddress(L"GameAssembly.dll"));
 	std::printf("Unity Player: 0x%X\n", TargetProcess.GetModuleAddress(L"UnityPlayer.dll"));
 
