@@ -21,6 +21,7 @@
 #include <random>
 #include <sstream>
 #include <locale>
+#include <cstdint>
 #include "json.hpp"
 using json = nlohmann::json;
 #pragma comment(lib, "ws2_32.lib")

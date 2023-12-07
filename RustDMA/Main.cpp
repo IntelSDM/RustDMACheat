@@ -5,6 +5,7 @@
 #include "MainCamera.h"
 #include "ConvarGraphics.h"
 #include "ConvarAdmin.h"
+#include "ConsoleSystem.h"
 DMAHandler TargetProcess = DMAHandler(L"RustClient.exe");
 
 void main()
@@ -37,6 +38,6 @@ void main()
 	ConvarAdmin *convaradmin = new ConvarAdmin();
 	convaradmin->ClearVisionInWater(true);
 	convaradmin->SetAdminTime(12);
-
+	ConsoleSystem* consolesystem = new ConsoleSystem();
 	while (true) {}
 }
