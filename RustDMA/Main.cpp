@@ -4,6 +4,7 @@
 #include "OcclusionCulling.h"
 #include "MainCamera.h"
 #include "ConvarGraphics.h"
+#include "ConvarAdmin.h"
 DMAHandler TargetProcess = DMAHandler(L"RustClient.exe");
 
 void main()
@@ -33,5 +34,9 @@ void main()
 	MainCamera* maincamera = new MainCamera();
 	ConvarGraphics* convargraphics = new ConvarGraphics();
 	convargraphics->WriteFOV(100);
+	ConvarAdmin *convaradmin = new ConvarAdmin();
+	convaradmin->ClearVisionInWater(true);
+	convaradmin->SetAdminTime(12);
+
 	while (true) {}
 }

@@ -33,6 +33,9 @@
     <ClCompile Include="SDK\ConvarGraphics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SDK\ConvarAdmin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Misc\Pch\Pch.h">
@@ -51,6 +54,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SDK\ConvarGraphics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\ConvarAdmin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
