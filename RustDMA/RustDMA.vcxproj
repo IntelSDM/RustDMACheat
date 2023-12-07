@@ -170,12 +170,16 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Memory\DMAHandler.cpp" />
     <ClCompile Include="Misc\Pch\Pch.cpp" />
+    <ClCompile Include="SDK\ConvarGraphics.cpp" />
+    <ClCompile Include="SDK\MainCamera.cpp" />
     <ClCompile Include="SDK\OcclusionCulling.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Memory\DMAHandler.h" />
     <ClInclude Include="Misc\Pch\Pch.h" />
     <ClInclude Include="Globals.h" />
+    <ClInclude Include="SDK\ConvarGraphics.h" />
+    <ClInclude Include="SDK\MainCamera.h" />
     <ClInclude Include="SDK\OcclusionCulling.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

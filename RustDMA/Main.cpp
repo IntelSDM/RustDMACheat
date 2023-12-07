@@ -2,6 +2,8 @@
 #include "Globals.h"
 #include "DMAHandler.h"
 #include "OcclusionCulling.h"
+#include "MainCamera.h"
+#include "ConvarGraphics.h"
 DMAHandler TargetProcess = DMAHandler(L"RustClient.exe");
 
 void main()
@@ -28,5 +30,8 @@ void main()
 	OcclusionCulling* occlusionculling = new OcclusionCulling();
 	occlusionculling->WriteDebugSettings(DebugFilter::Dynamic);
 	occlusionculling->WriteLayerMask(131072);
+	MainCamera* maincamera = new MainCamera();
+	ConvarGraphics* convargraphics = new ConvarGraphics();
+	convargraphics->WriteFOV(100);
 	while (true) {}
 }
