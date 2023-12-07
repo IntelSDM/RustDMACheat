@@ -11,11 +11,13 @@ enum class DebugFilter
 class OcclusionCulling
 {
 	/*
+	Script.json
 	 "Address": 54747536,
       "Name": "OcclusionCulling_TypeInfo",
       "Signature": "OcclusionCulling_c*"
 	*/
 	uint64_t Class = 0x3436190; 
+	// Dump.cs/dummy dll
 	uint64_t StaticField = 0xB8;// Static Padding To Access Static Fields
 	uint64_t Instance = 0x70; // 	public static OcclusionCulling Instance
 	uint64_t DebugSettings = 0x1A0; // 	public OcclusionCulling.DebugSettings debugSettings
