@@ -180,7 +180,7 @@ DMAHandler::DMAHandler(const wchar_t* wname, bool memMap)
 
 		log("inizializing...");
 
-		LPSTR args[] = { (LPSTR)"", (LPSTR)"-device", (LPSTR)"fpga", (LPSTR)"-v", (LPSTR)"-printf", (LPSTR)"" };
+		LPSTR args[] = { (LPSTR)"", (LPSTR)"-device", (LPSTR)"fpga", (LPSTR)"-v", (LPSTR)"-printf", (LPSTR)"", (LPSTR)"" };
 		DWORD argc = 5;
 
 
