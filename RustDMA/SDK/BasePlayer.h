@@ -1,4 +1,5 @@
 #pragma once
+#include "BaseMovement.h"
 enum class PlayerFlags : uint32_t
 {
 	Unused1 = 1,
@@ -33,8 +34,12 @@ class BasePlayer
 {
 	uint64_t Class = 0;
 	uint64_t PlayerFlag = 0x8C8; // 	public global::BasePlayer.PlayerFlags playerFlags;
+	uint64_t BaseMovementOffset = 0x6A0; // public BaseMovement movement;
+
+	BaseMovement* BaseMovementInstance;
 public:
 	BasePlayer(uint64_t address);
 	PlayerFlags GetPlayerFlag();
 	void WritePlayerFlag(PlayerFlags flag);
+	BaseMovement* GetBaseMovement();
 };

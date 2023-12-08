@@ -46,6 +46,16 @@ void main()
 	BasePlayer* baseplayer = new BasePlayer(localplayer->GetBasePlayer());
 	baseplayer->GetPlayerFlag();
 	baseplayer->WritePlayerFlag(PlayerFlags::IsAdmin);
+	while (true)
+	{
+		auto handle = TargetProcess.CreateScatterHandle();
+		baseplayer->GetBaseMovement()->WriteGroundAngle(handle,0.0f);
+		baseplayer->GetBaseMovement()->WriteGroundAngleNew(handle,0.0f);
+		baseplayer->GetBaseMovement()->WriteMaxAngleClimbing(handle,999.0f);
+		baseplayer->GetBaseMovement()->WriteMaxAngleWalking(handle,999.0f);
+		TargetProcess.ExecuteScatterWrite(handle);
+		Sleep(100);
+	}
 	//BaseNetworkable* basenetworkable = new BaseNetworkable();
 	//basenetworkable->ItterateEntities();
 	while (true) {}

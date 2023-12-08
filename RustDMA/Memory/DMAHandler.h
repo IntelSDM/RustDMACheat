@@ -124,6 +124,18 @@ public:
 	{
 		return Write(reinterpret_cast<ULONG64>(address), reinterpret_cast<ULONG64>(&value), sizeof(T));
 	}
+	template <typename T>
+	bool QueueScatterWriteEx(VMMDLL_SCATTER_HANDLE handle, uint64_t addr, T value) const
+	{
+		assertNoInit();
+
+		bool ret = VMMDLL_Scatter_PrepareWrite(handle, addr, reinterpret_cast<PBYTE>(&value), sizeof(value));
+		if(!ret)
+		{
+			log("failed to prepare scatter write at 0x%p\n", addr);
+		}
+		return ret;
+	}
 
 	//Handle Scatter
 	void QueueScatterReadEx(VMMDLL_SCATTER_HANDLE handle, uint64_t addr, void* bffr, size_t size) const;
