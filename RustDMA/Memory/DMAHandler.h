@@ -5,7 +5,6 @@
 
 // set to FALSE if you dont want to track the total read size of the DMA
 #define COUNT_TOTAL_READSIZE TRUE
-
 class DMAHandler
 {
 
@@ -76,7 +75,7 @@ public:
 	ULONG64 GetBaseAddress();
 	ULONG64 GetModuleAddress(std::wstring modulename);
 	void Read(ULONG64 address, ULONG64 buffer, SIZE_T size) const;
-
+	
 	template <typename T>
 	T Read(void* address)
 	{

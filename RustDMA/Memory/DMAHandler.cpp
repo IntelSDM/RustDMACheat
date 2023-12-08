@@ -289,6 +289,7 @@ ULONG64 DMAHandler::GetBaseAddress()
 
 	return processInfo.base;
 }
+
 bool DMAHandler::ReadBool(const ULONG64 address, const ULONG64 buffer, const SIZE_T size) const
 {
 	assertNoInit();
