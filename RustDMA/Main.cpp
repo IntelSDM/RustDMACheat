@@ -8,6 +8,7 @@
 #include "ConsoleSystem.h"
 #include "LocalPlayer.h"
 #include "BaseNetworkable.h"
+#include "BasePlayer.h"
 DMAHandler TargetProcess = DMAHandler(L"RustClient.exe");
 
 void main()
@@ -42,7 +43,10 @@ void main()
 	convaradmin->SetAdminTime(12);
 	ConsoleSystem* consolesystem = new ConsoleSystem();
 	LocalPlayer* localplayer = new LocalPlayer();
-	BaseNetworkable* basenetworkable = new BaseNetworkable();
-	basenetworkable->ItterateEntities();
+	BasePlayer* baseplayer = new BasePlayer(localplayer->GetBasePlayer());
+	baseplayer->GetPlayerFlag();
+	baseplayer->WritePlayerFlag(PlayerFlags::IsAdmin);
+	//BaseNetworkable* basenetworkable = new BaseNetworkable();
+	//basenetworkable->ItterateEntities();
 	while (true) {}
 }

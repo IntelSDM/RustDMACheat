@@ -171,6 +171,7 @@
     <ClCompile Include="Memory\DMAHandler.cpp" />
     <ClCompile Include="Misc\Pch\Pch.cpp" />
     <ClCompile Include="SDK\BaseNetworkable.cpp" />
+    <ClCompile Include="SDK\BasePlayer.cpp" />
     <ClCompile Include="SDK\ConsoleSystem.cpp" />
     <ClCompile Include="SDK\ConvarAdmin.cpp" />
     <ClCompile Include="SDK\ConvarGraphics.cpp" />
@@ -183,6 +184,7 @@
     <ClInclude Include="Misc\Pch\Pch.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="SDK\BaseNetworkable.h" />
+    <ClInclude Include="SDK\BasePlayer.h" />
     <ClInclude Include="SDK\ConsoleSystem.h" />
     <ClInclude Include="SDK\ConvarAdmin.h" />
     <ClInclude Include="SDK\ConvarGraphics.h" />
