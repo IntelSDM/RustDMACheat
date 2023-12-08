@@ -13,12 +13,13 @@ void ConsoleSystem::DisableCommand(uint64_t command)
 	{
 		if (wcscmp(commandstring, blacklistedcommand.c_str()) == 0)
 		{
+			printf("[ConsoleSystem] ");
 			wprintf(commandstring);
 			if (!TargetProcess.Write<bool>(command + AllowRunFromServer, false))
 			{
-				printf(" [ConsoleSystem] Failed To Block From Server\n");
+				printf(" - Failed To Block From Server\n");
 			}
-			printf(" [ConsoleSystem] Blocked Command From Server\n");
+			printf(" - Blocked Command From Server\n");
 			return;
 		}
 	

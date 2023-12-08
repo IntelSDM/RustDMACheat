@@ -64,7 +64,7 @@ public:
 	 * \param wname process name
 	 * \param memMap whether the memory map should get dumped to file.
 	 */
-	DMAHandler(const wchar_t* wname, bool memMap = false);
+	DMAHandler(const wchar_t* wname, bool memMap = true);
 	bool FixDTB();
 	// Whether the DMA and Process are initialized
 	bool IsInitialized() const;

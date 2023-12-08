@@ -199,12 +199,11 @@ DMAHandler::DMAHandler(const wchar_t* wname, bool memMap)
 				char buffer[MAX_PATH];
 				GetModuleFileNameA(nullptr, buffer, MAX_PATH);
 				//Remove the executable name
-				std::string directoryPath = std::filesystem::path(buffer).parent_path().string();
-				directoryPath += "\\mmap.txt";
+
 
 				//Add the memory map to the arguments and increase arg count.
 				args[argc++] = const_cast<LPSTR>("-memmap");
-				args[argc++] = const_cast<LPSTR>(directoryPath.c_str());
+				args[argc++] = const_cast<LPSTR>("mmap.txt");
 			}
 		}
 		DMA_HANDLE = VMMDLL_Initialize(argc, args);

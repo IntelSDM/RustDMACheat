@@ -6,6 +6,7 @@
 #include "ConvarGraphics.h"
 #include "ConvarAdmin.h"
 #include "ConsoleSystem.h"
+#include "LocalPlayer.h"
 DMAHandler TargetProcess = DMAHandler(L"RustClient.exe");
 
 void main()
@@ -23,9 +24,9 @@ void main()
 		Sleep(1000);
 		TargetProcess = DMAHandler(L"RustClient.exe");
 	}
-	std::printf("PID: 0x%X\n", TargetProcess.GetPID());
+	std::printf("PID: %X\n", TargetProcess.GetPID());
 	TargetProcess.FixDTB();
-	std::printf("Base Address: %X\n", TargetProcess.GetBaseAddress());
+	std::printf("Base Address: 0x%X\n", TargetProcess.GetBaseAddress());
 	std::printf("Game Assembly: 0x%X\n", TargetProcess.GetModuleAddress(L"GameAssembly.dll"));
 	std::printf("Unity Player: 0x%X\n", TargetProcess.GetModuleAddress(L"UnityPlayer.dll"));
 
@@ -39,5 +40,6 @@ void main()
 	convaradmin->ClearVisionInWater(true);
 	convaradmin->SetAdminTime(12);
 	ConsoleSystem* consolesystem = new ConsoleSystem();
+	LocalPlayer* localplayer = new LocalPlayer();
 	while (true) {}
 }

@@ -173,6 +173,7 @@
     <ClCompile Include="SDK\ConsoleSystem.cpp" />
     <ClCompile Include="SDK\ConvarAdmin.cpp" />
     <ClCompile Include="SDK\ConvarGraphics.cpp" />
+    <ClCompile Include="SDK\LocalPlayer.cpp" />
     <ClCompile Include="SDK\MainCamera.cpp" />
     <ClCompile Include="SDK\OcclusionCulling.cpp" />
   </ItemGroup>
@@ -183,6 +184,7 @@
     <ClInclude Include="SDK\ConsoleSystem.h" />
     <ClInclude Include="SDK\ConvarAdmin.h" />
     <ClInclude Include="SDK\ConvarGraphics.h" />
+    <ClInclude Include="SDK\LocalPlayer.h" />
     <ClInclude Include="SDK\MainCamera.h" />
     <ClInclude Include="SDK\OcclusionCulling.h" />
   </ItemGroup>
