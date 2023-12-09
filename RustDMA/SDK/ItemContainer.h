@@ -8,5 +8,5 @@ class ItemContainer
 public:
 	ItemContainer(uint64_t container);
 	uint64_t GetItemList();
-	Item* GetItemBySlot(uint64_t slot);
+	std::vector<Item*> GetItemSlots();
 };

@@ -8,4 +8,5 @@ class PlayerInventory
 public:
 	PlayerInventory(uint64_t address);
 	ItemContainer* GetItemContainer();
+	~PlayerInventory();
 };

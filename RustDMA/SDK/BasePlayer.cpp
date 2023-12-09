@@ -17,6 +17,11 @@ BasePlayer::BasePlayer(uint64_t address)
 	this->BaseMovementInstance = new BaseMovement(BaseMovementOffset);
 	this->PlayerInventoryInstance = new PlayerInventory(PlayerInventoryOffset);
 }
+BasePlayer::~BasePlayer()
+{
+	delete BaseMovementInstance;
+	delete PlayerInventoryInstance;
+}
 PlayerFlags BasePlayer::GetPlayerFlag()
 {
 	PlayerFlags flag = TargetProcess.Read<PlayerFlags>(Class + PlayerFlag);
@@ -46,11 +51,22 @@ Item* BasePlayer::GetActiveItem()
 {
 	if (ActiveItemID == 0)
 		return nullptr;
+
+	std::vector<Item*> items = PlayerInventoryInstance->GetItemContainer()->GetItemSlots();
 	for (auto i = 0; i < 6; i++)
 	{
-		Item* item = PlayerInventoryInstance->GetItemContainer()->GetItemBySlot(i);
-
+		Item* item = items[i];
+		if (item == nullptr)
+		{
+			delete item;
+			continue;
+		}
 		if (ActiveItemID == item->GetItemID())
+		{
+			printf("[BasePlayer] ActiveItemID: 0x%llX\n", item->GetItemID());
 			return item;
+		}
+		delete item;
 	}
+	return nullptr;
 }

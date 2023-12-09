@@ -14,3 +14,7 @@ ItemContainer* PlayerInventory::GetItemContainer()
 {
 	return ContainerBeltInstance;
 }
+PlayerInventory::~PlayerInventory()
+{
+	delete ContainerBeltInstance;
+}

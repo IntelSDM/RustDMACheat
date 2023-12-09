@@ -173,6 +173,7 @@
     <ClCompile Include="SDK\BaseMovement.cpp" />
     <ClCompile Include="SDK\BaseNetworkable.cpp" />
     <ClCompile Include="SDK\BasePlayer.cpp" />
+    <ClCompile Include="SDK\BaseProjectile.cpp" />
     <ClCompile Include="SDK\ConsoleSystem.cpp" />
     <ClCompile Include="SDK\ConvarAdmin.cpp" />
     <ClCompile Include="SDK\ConvarGraphics.cpp" />
@@ -190,6 +191,7 @@
     <ClInclude Include="SDK\BaseMovement.h" />
     <ClInclude Include="SDK\BaseNetworkable.h" />
     <ClInclude Include="SDK\BasePlayer.h" />
+    <ClInclude Include="SDK\BaseProjectile.h" />
     <ClInclude Include="SDK\ConsoleSystem.h" />
     <ClInclude Include="SDK\ConvarAdmin.h" />
     <ClInclude Include="SDK\ConvarGraphics.h" />

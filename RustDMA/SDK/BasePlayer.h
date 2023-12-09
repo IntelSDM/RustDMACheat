@@ -47,6 +47,7 @@ class BasePlayer
 
 public:
 	BasePlayer(uint64_t address);
+	~BasePlayer();
 	PlayerFlags GetPlayerFlag();
 	void WritePlayerFlag(PlayerFlags flag);
 	BaseMovement* GetBaseMovement();
