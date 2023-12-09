@@ -49,10 +49,13 @@ void main()
 	while (true)
 	{
 		auto handle = TargetProcess.CreateScatterHandle();
+		// spiderman
 		baseplayer->GetBaseMovement()->WriteGroundAngle(handle,0.0f);
 		baseplayer->GetBaseMovement()->WriteGroundAngleNew(handle,0.0f);
 		baseplayer->GetBaseMovement()->WriteMaxAngleClimbing(handle,999.0f);
 		baseplayer->GetBaseMovement()->WriteMaxAngleWalking(handle,999.0f);
+		baseplayer->UpdateActiveItemID(handle);
+		baseplayer->GetActiveItem();
 		TargetProcess.ExecuteScatterWrite(handle);
 		Sleep(100);
 	}

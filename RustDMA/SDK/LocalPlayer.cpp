@@ -11,6 +11,7 @@ LocalPlayer::LocalPlayer()
 	printf("[LocalPlayer] Static Fields: 0x%llX\n", StaticField);
 	this->BasePlayerBackingField = TargetProcess.Read<uint64_t>(StaticField + BasePlayerBackingField); // Set BasePlayer Backing Field
 	printf("[LocalPlayer] Base Player: 0x%llX\n", BasePlayerBackingField);
+
 }
 uint64_t LocalPlayer::GetBasePlayer()
 {

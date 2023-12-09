@@ -78,14 +78,9 @@ bool DMAHandler::FixDTB()
 		*pLineEnd = '\0';
 
 		Info info = {};
-	//	std::cout << pLineStart << std::endl;
-	//	int numFields = sscanf(pLineStart, "%X %u %llx %llx %s", &info.index, &info.process_id, &info.dtb, &info.kernelAddr, &info.name);
 		std::istringstream iss(pLineStart);
 		iss >> std::hex >> info.index >> info.process_id >> info.dtb >> info.kernelAddr;
-		// Read the rest of the line into info.name
 		std::getline(iss, info.name);
-	//	std::cout << "Parsed values: " << info.index << " " << info.process_id << " " << info.dtb << " " << info.kernelAddr << " " << info.name << std::endl;
-		//printf("%X %X %llX %llx %s\n", info.index, info.process_id, info.dtb, info.kernelAddr, info.name);
 		if (info.process_id == 0) {//parts that lack a name or have a NULL pid are suspects
 			possibleDTBs.push_back(info.dtb);
 		}

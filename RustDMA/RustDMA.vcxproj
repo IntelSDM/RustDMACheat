@@ -176,9 +176,12 @@
     <ClCompile Include="SDK\ConsoleSystem.cpp" />
     <ClCompile Include="SDK\ConvarAdmin.cpp" />
     <ClCompile Include="SDK\ConvarGraphics.cpp" />
+    <ClCompile Include="SDK\Item.cpp" />
+    <ClCompile Include="SDK\ItemContainer.cpp" />
     <ClCompile Include="SDK\LocalPlayer.cpp" />
     <ClCompile Include="SDK\MainCamera.cpp" />
     <ClCompile Include="SDK\OcclusionCulling.cpp" />
+    <ClCompile Include="SDK\PlayerInventory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Memory\DMAHandler.h" />
@@ -190,9 +193,12 @@
     <ClInclude Include="SDK\ConsoleSystem.h" />
     <ClInclude Include="SDK\ConvarAdmin.h" />
     <ClInclude Include="SDK\ConvarGraphics.h" />
+    <ClInclude Include="SDK\Item.h" />
+    <ClInclude Include="SDK\ItemContainer.h" />
     <ClInclude Include="SDK\LocalPlayer.h" />
     <ClInclude Include="SDK\MainCamera.h" />
     <ClInclude Include="SDK\OcclusionCulling.h" />
+    <ClInclude Include="SDK\PlayerInventory.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
