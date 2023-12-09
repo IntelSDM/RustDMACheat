@@ -46,10 +46,7 @@ void main()
 	BasePlayer* baseplayer = new BasePlayer(localplayer->GetBasePlayer());
 	baseplayer->GetPlayerFlag();
 	baseplayer->WritePlayerFlag(PlayerFlags::IsAdmin);
-	auto handle = TargetProcess.CreateScatterHandle();
-	baseplayer->UpdateActiveItemID(handle);
-	TargetProcess.ExecuteScatterWrite(handle);
-	Item* item = baseplayer->GetActiveItem();
+	
 	while (true)
 	{
 		auto handle = TargetProcess.CreateScatterHandle();
@@ -59,9 +56,12 @@ void main()
 		baseplayer->GetBaseMovement()->WriteMaxAngleClimbing(handle,999.0f);
 		baseplayer->GetBaseMovement()->WriteMaxAngleWalking(handle,999.0f);
 		baseplayer->UpdateActiveItemID(handle);
-		
 		TargetProcess.ExecuteScatterWrite(handle);
-	
+		TargetProcess.CloseScatterHandle(handle);
+		Item* item = baseplayer->GetActiveItem();
+	//	Item* item = baseplayer->GetActiveItem();
+	//	delete item;
+	//	delete item;
 		//if (item != nullptr)
 		//{
 		//	printf("Item Found");

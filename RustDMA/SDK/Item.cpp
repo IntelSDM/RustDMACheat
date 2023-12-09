@@ -4,14 +4,16 @@
 
 Item::Item(uint64_t address)
 {
-	printf("[Item] Initialized\n");
+	
 	Class = address;
+//	printf("[Item] Initialized: 0x%llX\n", Class);
 	auto handle = TargetProcess.CreateScatterHandle();
-	TargetProcess.QueueScatterReadEx(handle, Class + ItemID,reinterpret_cast<void*>(&ItemID),sizeof(uint64_t));
+	TargetProcess.QueueScatterReadEx(handle, Class + ItemID,reinterpret_cast<void*>(&ItemID),sizeof(uint32_t));
 	TargetProcess.QueueScatterReadEx(handle, Class + HeldEntity, reinterpret_cast<void*>(&HeldEntity), sizeof(uint64_t));
 	TargetProcess.ExecuteScatterRead(handle);
-	printf("[Item] ItemID: 0x%llX\n", ItemID);
-	printf("[Item] HeldEntity: 0x%llX\n", HeldEntity);
+	TargetProcess.CloseScatterHandle(handle);
+	//printf("[Item] ItemID: 0x%llX\n", ItemID);
+	//printf("[Item] HeldEntity: 0x%llX\n", HeldEntity);
 
 }
 Item::~Item()

@@ -8,9 +8,10 @@ BasePlayer::BasePlayer(uint64_t address)
 	printf("[BasePlayer] Initialized\n");
 	auto handle = TargetProcess.CreateScatterHandle();
 	TargetProcess.QueueScatterReadEx(handle,Class + BaseMovementOffset, reinterpret_cast<void*>(&BaseMovementOffset),sizeof(uint64_t));
-	TargetProcess.QueueScatterReadEx(handle, Class + ActiveItemIDOffset, reinterpret_cast<void*>(&ActiveItemID), sizeof(uint64_t));
+	TargetProcess.QueueScatterReadEx(handle, Class + ActiveItemIDOffset, reinterpret_cast<void*>(&ActiveItemID), sizeof(uint32_t));
 	TargetProcess.QueueScatterReadEx(handle, Class + PlayerInventoryOffset, reinterpret_cast<void*>(&PlayerInventoryOffset), sizeof(uint64_t));
 	TargetProcess.ExecuteScatterRead(handle);
+	TargetProcess.CloseScatterHandle(handle);
 	printf("[BasePlayer] BaseMovement: 0x%llX\n", BaseMovementOffset);
 	printf("[BasePlayer] ActiveItemID: 0x%llX\n", ActiveItemID);
 	printf("[BasePlayer] PlayerInventory: 0x%llX\n", PlayerInventoryOffset);
@@ -52,21 +53,30 @@ Item* BasePlayer::GetActiveItem()
 	if (ActiveItemID == 0)
 		return nullptr;
 
-	std::vector<Item*> items = PlayerInventoryInstance->GetItemContainer()->GetItemSlots();
-	for (auto i = 0; i < 6; i++)
+	std::vector<uintptr_t> objectpointrs;
+	objectpointrs.resize(6);
+	uint64_t items = PlayerInventoryInstance->GetItemContainer()->GetItemList();
+	auto handle = TargetProcess.CreateScatterHandle();
+	for (int i = 0; i < 6; i++)
 	{
-		Item* item = items[i];
-		if (item == nullptr)
-		{
-			delete item;
-			continue;
-		}
-		if (ActiveItemID == item->GetItemID())
-		{
-			printf("[BasePlayer] ActiveItemID: 0x%llX\n", item->GetItemID());
-			return item;
-		}
-		delete item;
+		TargetProcess.QueueScatterReadEx(handle, items + 0x20 + (i * 0x8), reinterpret_cast<void*>(&objectpointrs[i]), sizeof(uint64_t));
 	}
-	return nullptr;
+	TargetProcess.ExecuteScatterRead(handle);
+	TargetProcess.CloseScatterHandle(handle);
+	Item* founditem = nullptr;
+	for (int i = 0; i < 6; i++)
+	{
+		Item* item = new Item(objectpointrs[i]);
+		int activeweaponid = item->GetItemID();
+		if (ActiveItemID == activeweaponid)
+		{
+
+			printf("Found Item ID");
+			founditem =  item;
+		}
+		delete item; // DISPOSE OF THE WASTE!!!
+	}
+
+
+	return founditem;
 }

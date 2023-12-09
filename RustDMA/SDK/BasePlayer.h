@@ -43,7 +43,7 @@ class BasePlayer
 	BaseMovement* BaseMovementInstance;
 	uint64_t Inventory = 0x8D8; // public PlayerInventory inventory;
 	PlayerInventory* PlayerInventoryInstance = nullptr;
-	uint64_t ActiveItemID = 0;
+	uint32_t ActiveItemID = 0;
 
 public:
 	BasePlayer(uint64_t address);

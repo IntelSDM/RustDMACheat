@@ -13,11 +13,13 @@ ItemContainer::ItemContainer(uint64_t address)
 	printf("[ItemContainer] Initialized\n");
 	this->ItemList = TargetProcess.Read<uint64_t>(Class + ItemList);
 	printf("[ItemContainer] ItemList: 0x%llX\n", ItemList);
+	this->ItemListItems = TargetProcess.Read<uint64_t>(ItemList + ItemListItems); // +0x10 to get the actual items in the list.
+	printf("[ItemContainer] ItemListItems: 0x%llX\n", ItemListItems);
 }
 
 uint64_t ItemContainer::GetItemList()
 {
-	return ItemList;
+	return ItemListItems;
 }
 std::vector<Item*> ItemContainer::GetItemSlots()
 {
@@ -34,10 +36,11 @@ std::vector<Item*> ItemContainer::GetItemSlots()
 	TargetProcess.ExecuteScatterRead(handle);
 	for (int i = 0; i < 6; i++)
 	{
-		if (objectpointers[i] == NULL)
-			items.push_back(nullptr);
-		else
-			items.push_back(new Item(objectpointers[i]));
+		printf("[ItemContainer] ItemSlot %d: 0x%llX\n", i, objectpointers[i]);
+		//if (objectpointers[i] == NULL)
+		//	items.push_back(nullptr);
+		//else
+		//	items.push_back(new Item(objectpointers[i]));
 	}
 
 	return items;
