@@ -55,4 +55,5 @@ public:
 	void UpdateActiveItemID(VMMDLL_SCATTER_HANDLE handle);
 	uint64_t GetActiveItemID();
 	Item* GetActiveItem();
+	bool IsPlayerValid();
 };

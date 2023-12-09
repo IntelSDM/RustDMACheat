@@ -52,7 +52,7 @@ Item* BasePlayer::GetActiveItem()
 {
 	if (ActiveItemID == 0)
 		return nullptr;
-
+	printf("Active Item ID: %d\n", ActiveItemID);
 	std::vector<uintptr_t> objectpointrs;
 	objectpointrs.resize(6);
 	uint64_t items = PlayerInventoryInstance->GetItemContainer()->GetItemList();
@@ -68,6 +68,7 @@ Item* BasePlayer::GetActiveItem()
 	{
 		Item* item = new Item(objectpointrs[i]);
 		int activeweaponid = item->GetItemID();
+		printf("None Active Weapon ID: %d\n", item->GetItemID());
 		if (ActiveItemID == activeweaponid)
 		{
 
@@ -79,4 +80,9 @@ Item* BasePlayer::GetActiveItem()
 
 
 	return founditem;
+}
+
+bool BasePlayer::IsPlayerValid()
+{
+	return Class != 0 && BaseMovementOffset !=0 && PlayerInventoryOffset !=0;
 }

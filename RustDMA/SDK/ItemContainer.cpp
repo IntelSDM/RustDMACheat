@@ -25,6 +25,7 @@ std::vector<Item*> ItemContainer::GetItemSlots()
 {
 	if(Class == 0 || ItemList==0)
 		return std::vector<Item*>();
+	this->ItemListItems = TargetProcess.Read<uint64_t>(ItemList + ItemListItems); // refresh the item contents list
 	std::vector<Item*> items;
 	std::vector<uintptr_t> objectpointers;
 	objectpointers.resize(6);
