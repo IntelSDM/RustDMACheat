@@ -1,6 +1,5 @@
 #pragma once
 #include "BaseProjectile.h"
-#include "ItemDefinition.h"
 class Item
 {
 	uint64_t Class = 0x0;
@@ -8,7 +7,6 @@ class Item
 	uint32_t ItemID = 0x20; //public int itemid;
 	uint64_t HeldEntity = 0xB0; //private EntityRef heldEntity;
 	BaseProjectile* BaseProjectileInstance = nullptr;
-	ItemDefinition* ItemDefinitionInstance = nullptr;
 public:
 	Item(uint64_t address);
 	~Item();

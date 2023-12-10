@@ -37,11 +37,18 @@ class BasePlayer
 	uint64_t Class = 0;
 	uint64_t PlayerFlag = 0x8C8; // 	public global::BasePlayer.PlayerFlags playerFlags;
 	uint64_t BaseMovementOffset = 0x6A0; // public BaseMovement movement;
-	uint64_t PlayerInventoryOffset = 0x8D8; // public global::PlayerInventory inventory;
+	uint64_t PlayerInventory = 0x8D8; // public global::PlayerInventory inventory;
 	uint64_t ActiveItemIDOffset = 0x7D0; // private ItemId clActiveItem;
 	BaseMovement* BaseMovementInstance;
-	
+
+
 	uint32_t ActiveItemID = 0;
+
+	// these are offsets outside of baseplayer. I just don't want the hassle of 1000 classes. The Class is before the "->"
+	uint64_t ContainerBelt = 0x28; // PlayerInventory -> public global::ItemContainer containerBelt;
+	uint64_t ItemList = 0x40; // ItemContainer -> 	public List<global::Item> itemList;
+	uint64_t ItemListContents = 0x10; // ItemList + 0x10 is the actual contents of the c# list
+	uint64_t ItemListSize = 0x18; // ItemList + 0x18 is the size of a c# list
 
 public:
 	BasePlayer(uint64_t address);

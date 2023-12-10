@@ -9,13 +9,14 @@ BasePlayer::BasePlayer(uint64_t address)
 	auto handle = TargetProcess.CreateScatterHandle();
 	TargetProcess.QueueScatterReadEx(handle,Class + BaseMovementOffset, reinterpret_cast<void*>(&BaseMovementOffset),sizeof(uint64_t));
 	TargetProcess.QueueScatterReadEx(handle, Class + ActiveItemIDOffset, reinterpret_cast<void*>(&ActiveItemID), sizeof(uint32_t));
-	TargetProcess.QueueScatterReadEx(handle, Class + PlayerInventoryOffset, reinterpret_cast<void*>(&PlayerInventoryOffset), sizeof(uint64_t));
+	TargetProcess.QueueScatterReadEx(handle, Class + PlayerInventory, reinterpret_cast<void*>(&PlayerInventory), sizeof(uint64_t));
 	TargetProcess.ExecuteScatterRead(handle);
 	TargetProcess.CloseScatterHandle(handle);
 	printf("[BasePlayer] BaseMovement: 0x%llX\n", BaseMovementOffset);
 	printf("[BasePlayer] ActiveItemID: 0x%llX\n", ActiveItemID);
-	printf("[BasePlayer] PlayerInventory: 0x%llX\n", PlayerInventoryOffset);
+//	printf("[BasePlayer] PlayerInventory: 0x%llX\n", PlayerInventoryOffset);
 	this->BaseMovementInstance = new BaseMovement(BaseMovementOffset);
+	ContainerBelt = TargetProcess.Read<uint64_t>(PlayerInventory + ContainerBelt);
 }
 BasePlayer::~BasePlayer()
 {
@@ -51,16 +52,18 @@ Item* BasePlayer::GetActiveItem()
 	if (ActiveItemID == 0)
 		return nullptr;
 
-	printf("Active Item ID: %d\n", ActiveItemID);
-	std::vector<uint64_t> objectpointrs;
-	objectpointrs.resize(6);
-	
-	uint64_t inventory = TargetProcess.Read<uint64_t>(Class + 0x8D8);
-	uint64_t containerbelt = TargetProcess.Read<uint64_t>(inventory + 0x28);
-	uint64_t itemlist = TargetProcess.Read<uint64_t>(containerbelt + 0x40);
-	uint64_t items = TargetProcess.Read<uint64_t>(itemlist + 0x10);
-	uint32_t itemsize = TargetProcess.Read<uint32_t>(itemlist + 0x18);
+	uint64_t itemlist = TargetProcess.Read<uint64_t>(ContainerBelt + ItemList);
 	auto handle = TargetProcess.CreateScatterHandle();
+	uint64_t items = 0;
+	TargetProcess.QueueScatterReadEx(handle, itemlist + ItemListContents, reinterpret_cast<void*>(&items), sizeof(uint64_t));
+	uint32_t itemsize = 0;
+	TargetProcess.QueueScatterReadEx(handle, itemlist + ItemListSize, reinterpret_cast<void*>(&itemsize), sizeof(uint32_t));
+	TargetProcess.ExecuteScatterRead(handle);
+	TargetProcess.CloseScatterHandle(handle);
+
+	std::vector<uint64_t> objectpointrs;
+	objectpointrs.resize(itemsize);
+	handle = TargetProcess.CreateScatterHandle();
 	for (int i = 0; i < itemsize; i++)
 	{
 		TargetProcess.QueueScatterReadEx(handle, items + 0x20 + (i * 0x8), reinterpret_cast<void*>(&objectpointrs[i]), sizeof(uint64_t));
@@ -72,22 +75,20 @@ Item* BasePlayer::GetActiveItem()
 	{
 		if (objectpointrs[i] == NULL)	
 			continue; // no wasting reads and writes on null pointers
-		printf("Item Pointer   0x%llX\n", objectpointrs[i]);
-		Item* iteminstance = new Item(objectpointrs[i]);
-		int activeweaponid = iteminstance->GetItemID();
-		printf("Item ID: %d\n", activeweaponid);
-	/*
+		Item* item = new Item(objectpointrs[i]);
+		int activeweaponid = item->GetItemID();
+	
 		if (ActiveItemID == activeweaponid)
 		{
 
 			printf("Found Item ID: %d\n", activeweaponid);
-		//	founditem =  item;
+			founditem =  item;
 		}
 		else
 		{
 			printf("None Active Weapon ID: %d\n", activeweaponid);
-			//delete item; // DISPOSE OF THE WASTE!!!
-		}*/
+			delete item; // DISPOSE OF THE WASTE!!!
+		}
 		
 	}
 
@@ -97,5 +98,5 @@ Item* BasePlayer::GetActiveItem()
 
 bool BasePlayer::IsPlayerValid()
 {
-	return Class != 0 && BaseMovementOffset !=0 && PlayerInventoryOffset !=0;
+	return Class != 0 && BaseMovementOffset != 0;
 }
