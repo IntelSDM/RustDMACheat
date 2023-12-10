@@ -51,12 +51,6 @@
     <ClCompile Include="SDK\BaseMovement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SDK\PlayerInventory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SDK\ItemContainer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SDK\Item.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -99,12 +93,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SDK\BaseMovement.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SDK\PlayerInventory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SDK\ItemContainer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SDK\Item.h">

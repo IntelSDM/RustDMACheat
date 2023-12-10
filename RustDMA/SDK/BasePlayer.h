@@ -1,6 +1,5 @@
 #pragma once
 #include "BaseMovement.h"
-#include "PlayerInventory.h"
 #include "DMAHandler.h"
 #include "Item.h"
 enum class PlayerFlags : uint32_t
@@ -41,19 +40,18 @@ class BasePlayer
 	uint64_t PlayerInventoryOffset = 0x8D8; // public global::PlayerInventory inventory;
 	uint64_t ActiveItemIDOffset = 0x7D0; // private ItemId clActiveItem;
 	BaseMovement* BaseMovementInstance;
-	uint64_t Inventory = 0x8D8; // public PlayerInventory inventory;
-	PlayerInventory* PlayerInventoryInstance = nullptr;
+	
 	uint32_t ActiveItemID = 0;
 
 public:
 	BasePlayer(uint64_t address);
 	~BasePlayer();
 	PlayerFlags GetPlayerFlag();
-	void WritePlayerFlag(PlayerFlags flag);
+	void WritePlayerFlag(VMMDLL_SCATTER_HANDLE handle, PlayerFlags flag);
 	BaseMovement* GetBaseMovement();
-	PlayerInventory* GetPlayerInventory();
+
 	void UpdateActiveItemID(VMMDLL_SCATTER_HANDLE handle);
-	uint64_t GetActiveItemID();
+	uint32_t GetActiveItemID();
 	Item* GetActiveItem();
 	bool IsPlayerValid();
 };

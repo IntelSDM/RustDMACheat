@@ -16,12 +16,10 @@ BasePlayer::BasePlayer(uint64_t address)
 	printf("[BasePlayer] ActiveItemID: 0x%llX\n", ActiveItemID);
 	printf("[BasePlayer] PlayerInventory: 0x%llX\n", PlayerInventoryOffset);
 	this->BaseMovementInstance = new BaseMovement(BaseMovementOffset);
-	this->PlayerInventoryInstance = new PlayerInventory(PlayerInventoryOffset);
 }
 BasePlayer::~BasePlayer()
 {
 	delete BaseMovementInstance;
-	delete PlayerInventoryInstance;
 }
 PlayerFlags BasePlayer::GetPlayerFlag()
 {
@@ -29,12 +27,12 @@ PlayerFlags BasePlayer::GetPlayerFlag()
 	printf("[BasePlayer] PlayerFlag: %d\n", flag);
 	return flag;
 }
-void BasePlayer::WritePlayerFlag(PlayerFlags flag)
+void BasePlayer::WritePlayerFlag(VMMDLL_SCATTER_HANDLE handle, PlayerFlags flag)
 {
-	if(!TargetProcess.Write<PlayerFlags>(Class + PlayerFlag,flag))
+	if(!TargetProcess.QueueScatterWriteEx<PlayerFlags>(handle,Class + PlayerFlag,flag))
 			printf("[BasePlayer] Failed to write PlayerFlag\n");
 }
-uint64_t BasePlayer::GetActiveItemID()
+uint32_t BasePlayer::GetActiveItemID()
 {
 	return ActiveItemID;
 }
@@ -47,35 +45,50 @@ BaseMovement* BasePlayer::GetBaseMovement()
 {
 	return BaseMovementInstance;
 }
-
+// it appears that we cant get the item class correctly, no idea where the issue lies. 
 Item* BasePlayer::GetActiveItem()
 {
 	if (ActiveItemID == 0)
 		return nullptr;
+
 	printf("Active Item ID: %d\n", ActiveItemID);
-	std::vector<uintptr_t> objectpointrs;
+	std::vector<uint64_t> objectpointrs;
 	objectpointrs.resize(6);
-	uint64_t items = PlayerInventoryInstance->GetItemContainer()->GetItemList();
+	
+	uint64_t inventory = TargetProcess.Read<uint64_t>(Class + 0x8D8);
+	uint64_t containerbelt = TargetProcess.Read<uint64_t>(inventory + 0x28);
+	uint64_t itemlist = TargetProcess.Read<uint64_t>(containerbelt + 0x40);
+	uint64_t items = TargetProcess.Read<uint64_t>(itemlist + 0x10);
+	uint32_t itemsize = TargetProcess.Read<uint32_t>(itemlist + 0x18);
 	auto handle = TargetProcess.CreateScatterHandle();
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < itemsize; i++)
 	{
 		TargetProcess.QueueScatterReadEx(handle, items + 0x20 + (i * 0x8), reinterpret_cast<void*>(&objectpointrs[i]), sizeof(uint64_t));
 	}
 	TargetProcess.ExecuteScatterRead(handle);
 	TargetProcess.CloseScatterHandle(handle);
 	Item* founditem = nullptr;
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < itemsize; i++)
 	{
-		Item* item = new Item(objectpointrs[i]);
-		int activeweaponid = item->GetItemID();
-		printf("None Active Weapon ID: %d\n", item->GetItemID());
+		if (objectpointrs[i] == NULL)	
+			continue; // no wasting reads and writes on null pointers
+		printf("Item Pointer   0x%llX\n", objectpointrs[i]);
+		Item* iteminstance = new Item(objectpointrs[i]);
+		int activeweaponid = iteminstance->GetItemID();
+		printf("Item ID: %d\n", activeweaponid);
+	/*
 		if (ActiveItemID == activeweaponid)
 		{
 
-			printf("Found Item ID");
-			founditem =  item;
+			printf("Found Item ID: %d\n", activeweaponid);
+		//	founditem =  item;
 		}
-		delete item; // DISPOSE OF THE WASTE!!!
+		else
+		{
+			printf("None Active Weapon ID: %d\n", activeweaponid);
+			//delete item; // DISPOSE OF THE WASTE!!!
+		}*/
+		
 	}
 
 

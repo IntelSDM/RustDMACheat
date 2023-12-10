@@ -56,11 +56,13 @@ void MainThread()
 		BaseLocalPlayer->GetBaseMovement()->WriteGroundAngleNew(handle, 0.0f);
 		BaseLocalPlayer->GetBaseMovement()->WriteMaxAngleClimbing(handle, 999.0f);
 		BaseLocalPlayer->GetBaseMovement()->WriteMaxAngleWalking(handle, 999.0f);
-		BaseLocalPlayer->WritePlayerFlag(PlayerFlags::IsAdmin); // make this a scatter
-	//	BaseLocalPlayer->UpdateActiveItemID(handle);
+		BaseLocalPlayer->WritePlayerFlag(handle, PlayerFlags::IsAdmin); // make this a scatter
+		BaseLocalPlayer->UpdateActiveItemID(handle);
 
 		TargetProcess.ExecuteScatterWrite(handle);
 		TargetProcess.CloseScatterHandle(handle);
+		BaseLocalPlayer->GetActiveItem();
+	
 		//	Item* item = baseplayer->GetActiveItem();
 		//	Item* item = baseplayer->GetActiveItem();
 		//	delete item;

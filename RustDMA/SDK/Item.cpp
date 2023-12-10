@@ -7,20 +7,23 @@ Item::Item(uint64_t address)
 	
 	Class = address;
 //	printf("[Item] Initialized: 0x%llX\n", Class);
-	auto handle = TargetProcess.CreateScatterHandle();
-	TargetProcess.QueueScatterReadEx(handle, Class + ItemID,reinterpret_cast<void*>(&ItemID),sizeof(uint32_t));
-	TargetProcess.QueueScatterReadEx(handle, Class + HeldEntity, reinterpret_cast<void*>(&HeldEntity), sizeof(uint64_t));
-	TargetProcess.ExecuteScatterRead(handle);
-	TargetProcess.CloseScatterHandle(handle);
+//	auto handle = TargetProcess.CreateScatterHandle();
+//	TargetProcess.QueueScatterReadEx(handle, Class + Info,reinterpret_cast<void*>(&Info),sizeof(uint64_t));
+//	TargetProcess.QueueScatterReadEx(handle, Class + ItemID, reinterpret_cast<void*>(&ItemID), sizeof(uint32_t));
+//	TargetProcess.QueueScatterReadEx(handle, Class + HeldEntity, reinterpret_cast<void*>(&HeldEntity), sizeof(uint64_t));
+//	TargetProcess.ExecuteScatterRead(handle);
+// 
+	//TargetProcess.CloseScatterHandle(handle);
+	//ItemDefinitionInstance = new ItemDefinition(Info);
 	//printf("[Item] ItemID: 0x%llX\n", ItemID);
 	//printf("[Item] HeldEntity: 0x%llX\n", HeldEntity);
-
+	ItemID = TargetProcess.Read<uint32_t>(Class + ItemID);
 }
 Item::~Item()
 {
 	delete BaseProjectileInstance;
 }
-uint64_t Item::GetItemID()
+uint32_t Item::GetItemID()
 {
 	return ItemID;
 }
