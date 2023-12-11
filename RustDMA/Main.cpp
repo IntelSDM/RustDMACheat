@@ -14,6 +14,17 @@
 DMAHandler TargetProcess = DMAHandler(L"RustClient.exe");
 BasePlayer* BaseLocalPlayer = nullptr;
 void MainThread();
+bool SpiderMan = false;
+bool NoRecoil = true;
+int RecoilReduction = 25;
+bool AdminFlag = true;
+bool ChangeFov = true;
+int Fov = 100;
+bool ChangeTime = true;
+int Time = 12;
+bool BrightNight = false;
+bool BrightCaves = false;
+bool AdminEsp = true;
 // each time we reinitialize localplayer
 void PerServerVariables()
 {
@@ -24,16 +35,21 @@ void PerServerVariables()
 void SetupCvars()
 {
 	OcclusionCulling* occlusionculling = new OcclusionCulling();
-	occlusionculling->WriteDebugSettings(DebugFilter::Dynamic);
-	occlusionculling->WriteLayerMask(131072);
+	if (AdminEsp)
+	{
+		occlusionculling->WriteDebugSettings(DebugFilter::Dynamic);
+		occlusionculling->WriteLayerMask(131072);
+	}
 	MainCamera* maincamera = new MainCamera();
 	ConvarGraphics* convargraphics = new ConvarGraphics();
-	convargraphics->WriteFOV(100);
+	if(ChangeFov)
+	convargraphics->WriteFOV(Fov);
 	ConvarAdmin* convaradmin = new ConvarAdmin();
 	convaradmin->ClearVisionInWater(true);
-	convaradmin->SetAdminTime(12);
+	if(ChangeTime)
+	convaradmin->SetAdminTime(Time);
 	ConsoleSystem* consolesystem = new ConsoleSystem();
-	TODSky* todsky = new TODSky();
+	
 }
 void Intialize()
 {
@@ -49,56 +65,67 @@ void Intialize()
 }
 void MainThread()
 {
+	TODSky* todsky = new TODSky();
 	BaseProjectile* currentweapon = nullptr;
 	while (true)
 	{
 
 		auto handle = TargetProcess.CreateScatterHandle();
 		// spiderman
-		BaseLocalPlayer->GetBaseMovement()->WriteGroundAngle(handle, 0.0f);
-		BaseLocalPlayer->GetBaseMovement()->WriteGroundAngleNew(handle, 0.0f);
-		BaseLocalPlayer->GetBaseMovement()->WriteMaxAngleClimbing(handle, 999.0f);
-		BaseLocalPlayer->GetBaseMovement()->WriteMaxAngleWalking(handle, 999.0f);
+		if (SpiderMan)
+		{
+			BaseLocalPlayer->GetBaseMovement()->WriteGroundAngle(handle, 0.0f);
+			BaseLocalPlayer->GetBaseMovement()->WriteGroundAngleNew(handle, 0.0f);
+			BaseLocalPlayer->GetBaseMovement()->WriteMaxAngleClimbing(handle, 999.0f);
+			BaseLocalPlayer->GetBaseMovement()->WriteMaxAngleWalking(handle, 999.0f);
+		}
+		if(AdminFlag)
 		BaseLocalPlayer->WritePlayerFlag(handle, PlayerFlags::IsAdmin); 
-		// held weapon
-		BaseLocalPlayer->UpdateActiveItemID(handle);
+		if(NoRecoil)
+		BaseLocalPlayer->UpdateActiveItemID(handle);// held weapon
 
 		TargetProcess.ExecuteScatterWrite(handle);
 		TargetProcess.CloseScatterHandle(handle);
-
-		BaseLocalPlayer->SetupBeltContainerList(); // this needs to be called to know the active item
-
-		Item* helditem = BaseLocalPlayer->GetActiveItem();
-		if(helditem != nullptr)
-			currentweapon = helditem->GetBaseProjectile();
-		if (currentweapon != nullptr && helditem != nullptr)
+		if (NoRecoil)
 		{
-			if (currentweapon->IsValidWeapon())
-			{
-				uint32_t itemid = helditem->GetItemID();
-				if (itemid != 0 && helditem != nullptr)
-				{
+			BaseLocalPlayer->SetupBeltContainerList(); // this needs to be called to know the active item
 
-					currentweapon->WriteRecoilPitch(itemid, 0);
-					currentweapon->WriteRecoilYaw(itemid, 0);
+			Item* helditem = BaseLocalPlayer->GetActiveItem();
+			if (helditem != nullptr)
+				currentweapon = helditem->GetBaseProjectile();
+			if (currentweapon != nullptr && helditem != nullptr)
+			{
+				if (currentweapon->IsValidWeapon())
+				{
+					uint32_t itemid = helditem->GetItemID();
+					if (itemid != 0 && helditem != nullptr)
+					{
+
+						currentweapon->WriteRecoilPitch(itemid, RecoilReduction);
+						currentweapon->WriteRecoilYaw(itemid, RecoilReduction);
+					}
 				}
 			}
 		}
-		/*
-		This needs to be done in a fast af loop, Heavily intensive
-		// bright night, honestly useless.
-	//	todsky->WriteNightLightIntensity(25.0f);
-	//	todsky->WriteNightAmbientMultiplier(4.0f);
-		// Bright Caves.
-//		todsky->WriteDayAmbientMultiplier(2.0f);
-*/
+		
+		//This needs to be done in a fast af loop, Heavily intensive
+		if (BrightNight)
+		{
+			todsky->WriteNightLightIntensity(25.0f);
+			todsky->WriteNightAmbientMultiplier(4.0f);
+		}
+		if (BrightCaves)
+		{
+			todsky->WriteDayAmbientMultiplier(2.0f);
+		}
 
-		Sleep(100);
+
+		Sleep(10);
 	}
 }
 void main()
 {
-
+	AllocConsole();
 	if (!TargetProcess.IsInitialized())
 	{
 		DebugBreak();

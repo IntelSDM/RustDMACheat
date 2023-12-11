@@ -7,14 +7,13 @@ std::map<uint32_t, float> OriginalRecoilPitchMin;
 std::map<uint32_t, float> OriginalRecoilPitchMax;
 std::map<uint32_t, float> OriginalRecoilYawMin;
 std::map<uint32_t, float> OriginalRecoilYawMax;
-
 BaseProjectile::BaseProjectile(uint64_t address)
 {
-	printf("[BaseProjectile] Initialized\n");
+//	printf("[BaseProjectile] Initialized\n");
 	this->Class = address;
-	printf("[BaseProjectile] Class: 0x%llX\n", Class);
+	//printf("[BaseProjectile] Class: 0x%llX\n", Class);
 	this->RecoilProperties = TargetProcess.Read<uint64_t>(Class + RecoilProperties);
-	printf("[BaseProjectile] RecoilProperties: 0x%llX\n", RecoilProperties);
+	//printf("[BaseProjectile] RecoilProperties: 0x%llX\n", RecoilProperties);
 	if (IsValidWeapon())
 	{
 		uint64_t recoiloverride = TargetProcess.Read<uint64_t>(RecoilProperties + RecoilOverride);
@@ -22,11 +21,6 @@ BaseProjectile::BaseProjectile(uint64_t address)
 			RecoilOverride = RecoilProperties; // some guns don't have a new recoil pattern and use an old one. which is located at recoilproperties instead of override
 		else
 			RecoilOverride = recoiloverride;
-	//	if (!TargetProcess.Write<float>(RecoilOverride + RecoilPitchMax, 20 / 12 * 1.35))
-	//		printf("[BaseProjectile] Failed to write RecoilPitchMax\n");
-	//	TargetProcess.Write<float>(RecoilOverride + RecoilYawMax, 50 / 12 * 1.35);
-	//	TargetProcess.Write<float>(RecoilOverride + RecoilYawMin, 50 / 12 * 1.35);
-	//	TargetProcess.Write<float>(RecoilOverride + RecoilPitchMin,20/ 12 * 1.35);
 	}
 }
 bool BaseProjectile::IsValidWeapon()
