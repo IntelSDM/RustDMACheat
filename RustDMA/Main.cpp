@@ -69,12 +69,17 @@ void MainThread()
 		Item* helditem = BaseLocalPlayer->GetActiveItem();
 		if(helditem != nullptr)
 			currentweapon = helditem->GetBaseProjectile();
-		if (currentweapon != nullptr)
+		if (currentweapon != nullptr && helditem != nullptr)
 		{
 			if (currentweapon->IsValidWeapon())
 			{
-				currentweapon->WriteRecoilPitch(helditem->GetItemID(), 0);
-				currentweapon->WriteRecoilYaw(helditem->GetItemID(), 0);
+				uint32_t itemid = helditem->GetItemID();
+				if (itemid != 0 && helditem != nullptr)
+				{
+
+					currentweapon->WriteRecoilPitch(itemid, 0);
+					currentweapon->WriteRecoilYaw(itemid, 0);
+				}
 			}
 		}
 		/*

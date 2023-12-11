@@ -43,9 +43,9 @@ void BaseProjectile::WriteRecoilYaw(uint32_t itemid, int percent)
 	float yawmax = OriginalRecoilYawMax[itemid];
 	float yawminpercent = yawmin * (percent / 100.0f);
 	float yawmaxpercent = yawmax * (percent / 100.0f);
-	if (!TargetProcess.Write<float>(RecoilOverride + RecoilYawMin, yawmin))
+	if (!TargetProcess.Write<float>(RecoilOverride + RecoilYawMin, yawminpercent))
 		printf("[BaseProjectile] Failed to write RecoilYawMin\n");
-	if (!TargetProcess.Write<float>(RecoilOverride + RecoilYawMax, yawmax))
+	if (!TargetProcess.Write<float>(RecoilOverride + RecoilYawMax, yawmaxpercent))
 		printf("[BaseProjectile] Failed to write RecoilYawMax\n");
 }
 
@@ -61,9 +61,9 @@ void BaseProjectile::WriteRecoilPitch(uint32_t itemid, int percent)
 	float pitchmin = OriginalRecoilPitchMin[itemid];
 	float pitchmax = OriginalRecoilPitchMax[itemid];
 	float pitchminpercent = pitchmin * (percent / 100.0f);
-	float pitchmaxpercent = pitchmax * (percent / 100.0f);
-	if (!TargetProcess.Write<float>(RecoilOverride + RecoilPitchMin, pitchmin))
+	float pitchmaxpercent = pitchmax * (percent / 100.0f);		
+	if (!TargetProcess.Write<float>(RecoilOverride + RecoilPitchMin, pitchminpercent))
 		printf("[BaseProjectile] Failed to write RecoilPitchMin\n");
-	if (!TargetProcess.Write<float>(RecoilOverride + RecoilPitchMax, pitchmax))
+	if (!TargetProcess.Write<float>(RecoilOverride + RecoilPitchMax, pitchmaxpercent))
 		printf("[BaseProjectile] Failed to write RecoilPitchMax\n");
 }
