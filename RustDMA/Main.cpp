@@ -10,6 +10,7 @@
 #include "BaseNetworkable.h"
 #include "BasePlayer.h"
 #include "TODSky.h"
+#include "BaseProjectile.h"
 DMAHandler TargetProcess = DMAHandler(L"RustClient.exe");
 BasePlayer* BaseLocalPlayer = nullptr;
 void MainThread();
@@ -32,7 +33,7 @@ void SetupCvars()
 	convaradmin->ClearVisionInWater(true);
 	convaradmin->SetAdminTime(12);
 	ConsoleSystem* consolesystem = new ConsoleSystem();
-	
+	TODSky* todsky = new TODSky();
 }
 void Intialize()
 {
@@ -48,7 +49,7 @@ void Intialize()
 }
 void MainThread()
 {
-	TODSky* todsky = new TODSky();
+	BaseProjectile* currentweapon = nullptr;
 	while (true)
 	{
 
@@ -65,8 +66,13 @@ void MainThread()
 		TargetProcess.ExecuteScatterWrite(handle);
 		TargetProcess.CloseScatterHandle(handle);
 		BaseLocalPlayer->SetupBeltContainerList();
-		BaseLocalPlayer->GetActiveItem();
+		Item* helditem = BaseLocalPlayer->GetActiveItem();
+		if(helditem != nullptr)
+			currentweapon = helditem->GetBaseProjectile();
+		if (currentweapon != nullptr)
+		{
 
+		}
 		/*
 		This needs to be done in a fast af loop, Heavily intensive
 		// bright night, honestly useless.

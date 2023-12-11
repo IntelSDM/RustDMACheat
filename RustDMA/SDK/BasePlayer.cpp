@@ -102,12 +102,12 @@ Item* BasePlayer::GetActiveItem()
 		if (ActiveItemID == activeweaponid)
 		{
 
-			printf("Found Item ID: %d\n", activeweaponid);
+		//	printf("Found Item ID: %d\n", activeweaponid);
 			founditem =  item;
 		}
 		else
 		{
-			printf("None Active Weapon ID: %d\n", activeweaponid);
+			//printf("None Active Weapon ID: %d\n", activeweaponid);
 			delete item; // DISPOSE OF THE WASTE!!!
 		}
 		

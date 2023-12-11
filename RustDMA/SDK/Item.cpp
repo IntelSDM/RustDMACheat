@@ -18,6 +18,7 @@ Item::Item(uint64_t address)
 	//printf("[Item] ItemID: 0x%llX\n", ItemID);
 	//printf("[Item] HeldEntity: 0x%llX\n", HeldEntity);
 	ItemID = TargetProcess.Read<uint32_t>(Class + ItemID);
+	HeldEntity = TargetProcess.Read<uint64_t>(Class + HeldEntity);
 }
 Item::~Item()
 {
@@ -37,5 +38,6 @@ BaseProjectile* Item::GetBaseProjectile()
 {
 	if (HeldEntity == 0)
 		return nullptr;
-	BaseProjectile* projectile = new BaseProjectile(HeldEntity);
+	BaseProjectileInstance = new BaseProjectile(HeldEntity);
+	return BaseProjectileInstance;
 }
