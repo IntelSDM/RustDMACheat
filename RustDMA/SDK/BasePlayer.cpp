@@ -24,12 +24,16 @@ BasePlayer::~BasePlayer()
 }
 PlayerFlags BasePlayer::GetPlayerFlag()
 {
+	if (!IsPlayerValid())
+		return PlayerFlags::Connected;
 	PlayerFlags flag = TargetProcess.Read<PlayerFlags>(Class + PlayerFlag);
 	printf("[BasePlayer] PlayerFlag: %d\n", flag);
 	return flag;
 }
 void BasePlayer::WritePlayerFlag(VMMDLL_SCATTER_HANDLE handle, PlayerFlags flag)
 {
+	if (!IsPlayerValid())
+		return;
 	if(!TargetProcess.QueueScatterWriteEx<PlayerFlags>(handle,Class + PlayerFlag,flag))
 			printf("[BasePlayer] Failed to write PlayerFlag\n");
 }
@@ -46,13 +50,13 @@ BaseMovement* BasePlayer::GetBaseMovement()
 {
 	return BaseMovementInstance;
 }
-// it appears that we cant get the item class correctly, no idea where the issue lies. 
-Item* BasePlayer::GetActiveItem()
+void BasePlayer::SetupBeltContainerList()
 {
-	if (ActiveItemID == 0)
-		return nullptr;
+	if (!IsPlayerValid())
+		return;
+	BeltContainerList.clear();
 
-	uint64_t itemlist = TargetProcess.Read<uint64_t>(ContainerBelt + ItemList);
+	uint64_t itemlist = TargetProcess.Read<uint64_t>(ContainerBelt + ItemList); // yeah you need to reread this constantly, if you don't hell breaks loose. 
 	auto handle = TargetProcess.CreateScatterHandle();
 	uint64_t items = 0;
 	TargetProcess.QueueScatterReadEx(handle, itemlist + ItemListContents, reinterpret_cast<void*>(&items), sizeof(uint64_t));
@@ -60,9 +64,12 @@ Item* BasePlayer::GetActiveItem()
 	TargetProcess.QueueScatterReadEx(handle, itemlist + ItemListSize, reinterpret_cast<void*>(&itemsize), sizeof(uint32_t));
 	TargetProcess.ExecuteScatterRead(handle);
 	TargetProcess.CloseScatterHandle(handle);
+	BeltContainerList.resize(itemsize);
 
 	std::vector<uint64_t> objectpointrs;
 	objectpointrs.resize(itemsize);
+
+
 	handle = TargetProcess.CreateScatterHandle();
 	for (int i = 0; i < itemsize; i++)
 	{
@@ -70,12 +77,26 @@ Item* BasePlayer::GetActiveItem()
 	}
 	TargetProcess.ExecuteScatterRead(handle);
 	TargetProcess.CloseScatterHandle(handle);
-	Item* founditem = nullptr;
 	for (int i = 0; i < itemsize; i++)
 	{
-		if (objectpointrs[i] == NULL)	
+		if (objectpointrs[i] == NULL)
+			continue;
+		BeltContainerList.push_back(new Item(objectpointrs[i]));
+	}
+}
+// it appears that we cant get the item class correctly, no idea where the issue lies. 
+Item* BasePlayer::GetActiveItem()
+{
+	if (ActiveItemID == 0)
+		return nullptr;
+	if (!IsPlayerValid())
+		return nullptr;
+	Item* founditem = nullptr;
+	for (Item* item : BeltContainerList)
+	{
+		if (item == NULL)
 			continue; // no wasting reads and writes on null pointers
-		Item* item = new Item(objectpointrs[i]);
+
 		int activeweaponid = item->GetItemID();
 	
 		if (ActiveItemID == activeweaponid)
@@ -91,12 +112,11 @@ Item* BasePlayer::GetActiveItem()
 		}
 		
 	}
-
-
 	return founditem;
+	
 }
 
 bool BasePlayer::IsPlayerValid()
 {
-	return Class != 0 && BaseMovementOffset != 0;
+	return Class != 0 && BaseMovementOffset != 0 && PlayerInventory !=0;
 }

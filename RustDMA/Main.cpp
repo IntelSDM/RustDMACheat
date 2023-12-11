@@ -9,6 +9,7 @@
 #include "LocalPlayer.h"
 #include "BaseNetworkable.h"
 #include "BasePlayer.h"
+#include "TODSky.h"
 DMAHandler TargetProcess = DMAHandler(L"RustClient.exe");
 BasePlayer* BaseLocalPlayer = nullptr;
 void MainThread();
@@ -31,6 +32,7 @@ void SetupCvars()
 	convaradmin->ClearVisionInWater(true);
 	convaradmin->SetAdminTime(12);
 	ConsoleSystem* consolesystem = new ConsoleSystem();
+	
 }
 void Intialize()
 {
@@ -46,7 +48,7 @@ void Intialize()
 }
 void MainThread()
 {
-
+	TODSky* todsky = new TODSky();
 	while (true)
 	{
 
@@ -56,22 +58,24 @@ void MainThread()
 		BaseLocalPlayer->GetBaseMovement()->WriteGroundAngleNew(handle, 0.0f);
 		BaseLocalPlayer->GetBaseMovement()->WriteMaxAngleClimbing(handle, 999.0f);
 		BaseLocalPlayer->GetBaseMovement()->WriteMaxAngleWalking(handle, 999.0f);
-		BaseLocalPlayer->WritePlayerFlag(handle, PlayerFlags::IsAdmin); // make this a scatter
+		BaseLocalPlayer->WritePlayerFlag(handle, PlayerFlags::IsAdmin); 
+		// held weapon
 		BaseLocalPlayer->UpdateActiveItemID(handle);
 
 		TargetProcess.ExecuteScatterWrite(handle);
 		TargetProcess.CloseScatterHandle(handle);
+		BaseLocalPlayer->SetupBeltContainerList();
 		BaseLocalPlayer->GetActiveItem();
-	
-		//	Item* item = baseplayer->GetActiveItem();
-		//	Item* item = baseplayer->GetActiveItem();
-		//	delete item;
-		//	delete item;
-			//if (item != nullptr)
-			//{
-			//	printf("Item Found");
-			///	item->GetBaseProjectile();
-		//	}
+
+		/*
+		This needs to be done in a fast af loop, Heavily intensive
+		// bright night, honestly useless.
+	//	todsky->WriteNightLightIntensity(25.0f);
+	//	todsky->WriteNightAmbientMultiplier(4.0f);
+		// Bright Caves.
+//		todsky->WriteDayAmbientMultiplier(2.0f);
+*/
+
 		Sleep(100);
 	}
 }

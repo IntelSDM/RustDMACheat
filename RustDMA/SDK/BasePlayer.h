@@ -50,6 +50,9 @@ class BasePlayer
 	uint64_t ItemListContents = 0x10; // ItemList + 0x10 is the actual contents of the c# list
 	uint64_t ItemListSize = 0x18; // ItemList + 0x18 is the size of a c# list
 
+	std::vector<Item*> BeltContainerList;
+	
+
 public:
 	BasePlayer(uint64_t address);
 	~BasePlayer();
@@ -61,4 +64,5 @@ public:
 	uint32_t GetActiveItemID();
 	Item* GetActiveItem();
 	bool IsPlayerValid();
+	void SetupBeltContainerList();
 };

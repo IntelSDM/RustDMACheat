@@ -181,6 +181,7 @@
     <ClCompile Include="SDK\LocalPlayer.cpp" />
     <ClCompile Include="SDK\MainCamera.cpp" />
     <ClCompile Include="SDK\OcclusionCulling.cpp" />
+    <ClCompile Include="SDK\TODSky.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Memory\DMAHandler.h" />
@@ -197,6 +198,7 @@
     <ClInclude Include="SDK\LocalPlayer.h" />
     <ClInclude Include="SDK\MainCamera.h" />
     <ClInclude Include="SDK\OcclusionCulling.h" />
+    <ClInclude Include="SDK\TODSky.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
