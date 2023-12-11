@@ -65,7 +65,9 @@ void MainThread()
 
 		TargetProcess.ExecuteScatterWrite(handle);
 		TargetProcess.CloseScatterHandle(handle);
-		BaseLocalPlayer->SetupBeltContainerList();
+
+		BaseLocalPlayer->SetupBeltContainerList(); // this needs to be called to know the active item
+
 		Item* helditem = BaseLocalPlayer->GetActiveItem();
 		if(helditem != nullptr)
 			currentweapon = helditem->GetBaseProjectile();
