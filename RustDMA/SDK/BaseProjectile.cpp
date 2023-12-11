@@ -17,7 +17,11 @@ BaseProjectile::BaseProjectile(uint64_t address)
 	printf("[BaseProjectile] RecoilProperties: 0x%llX\n", RecoilProperties);
 	if (IsValidWeapon())
 	{
-		this->RecoilOverride = TargetProcess.Read<uint64_t>(RecoilProperties + RecoilOverride);
+		uint64_t recoiloverride = TargetProcess.Read<uint64_t>(RecoilProperties + RecoilOverride);
+		if (recoiloverride == 0)
+			RecoilOverride = RecoilProperties; // some guns don't have a new recoil pattern and use an old one. which is located at recoilproperties instead of override
+		else
+			RecoilOverride = recoiloverride;
 	//	if (!TargetProcess.Write<float>(RecoilOverride + RecoilPitchMax, 20 / 12 * 1.35))
 	//		printf("[BaseProjectile] Failed to write RecoilPitchMax\n");
 	//	TargetProcess.Write<float>(RecoilOverride + RecoilYawMax, 50 / 12 * 1.35);

@@ -118,9 +118,6 @@ void main()
 	std::printf("Unity Player: 0x%X\n", TargetProcess.GetModuleAddress(L"UnityPlayer.dll"));
 
 	Intialize();
-	
-	
-	
 	//BaseNetworkable* basenetworkable = new BaseNetworkable();
 	//basenetworkable->ItterateEntities();
 }
