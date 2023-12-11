@@ -5,6 +5,8 @@
 BasePlayer::BasePlayer(uint64_t address)
 {
 	this->Class = address;
+	if (address == 0)
+		return; // invalid
 	printf("[BasePlayer] Initialized\n");
 	auto handle = TargetProcess.CreateScatterHandle();
 	TargetProcess.QueueScatterReadEx(handle,Class + BaseMovementOffset, reinterpret_cast<void*>(&BaseMovementOffset),sizeof(uint64_t));

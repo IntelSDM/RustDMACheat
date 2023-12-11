@@ -71,7 +71,11 @@ void MainThread()
 			currentweapon = helditem->GetBaseProjectile();
 		if (currentweapon != nullptr)
 		{
-
+			if (currentweapon->IsValidWeapon())
+			{
+				currentweapon->WriteRecoilPitch(helditem->GetItemID(), 0);
+				currentweapon->WriteRecoilYaw(helditem->GetItemID(), 0);
+			}
 		}
 		/*
 		This needs to be done in a fast af loop, Heavily intensive

@@ -12,4 +12,6 @@ class BaseProjectile
 public:
 	BaseProjectile(uint64_t address);
 	bool IsValidWeapon();
+	void WriteRecoilYaw(uint32_t itemid, int percent);
+	void WriteRecoilPitch(uint32_t itemid, int percent);
 };

@@ -26,7 +26,10 @@ Item::~Item()
 }
 uint32_t Item::GetItemID()
 {
+	if(Class != 0 && this != nullptr)
 	return ItemID;
+	else
+			return 0;
 }
 
 uint64_t Item::GetHeldEntity()
