@@ -12,7 +12,7 @@
 #include "TODSky.h"
 #include "BaseProjectile.h"
 DMAHandler TargetProcess = DMAHandler(L"RustClient.exe");
-BasePlayer* BaseLocalPlayer = nullptr;
+std::shared_ptr<BasePlayer> BaseLocalPlayer = nullptr;
 void MainThread();
 bool SpiderMan = false;
 bool NoRecoil = true;
@@ -28,27 +28,27 @@ bool AdminEsp = true;
 // each time we reinitialize localplayer
 void PerServerVariables()
 {
-	LocalPlayer* localplayer = new LocalPlayer();
-	BasePlayer* baseplayer = new BasePlayer(localplayer->GetBasePlayer());
-	BaseLocalPlayer = new BasePlayer(localplayer->GetBasePlayer());
+	std::shared_ptr <LocalPlayer> localplayer = std::make_shared <LocalPlayer>();
+	std::shared_ptr <BasePlayer> baseplayer = std::make_shared <BasePlayer>(localplayer->GetBasePlayer());
+	BaseLocalPlayer = std::make_shared <BasePlayer>(localplayer->GetBasePlayer());
 }
 void SetupCvars()
 {
-	OcclusionCulling* occlusionculling = new OcclusionCulling();
+	std::shared_ptr < OcclusionCulling> occlusionculling = std::make_shared <OcclusionCulling>();
 	if (AdminEsp)
 	{
 		occlusionculling->WriteDebugSettings(DebugFilter::Dynamic);
 		occlusionculling->WriteLayerMask(131072);
 	}
-	MainCamera* maincamera = new MainCamera();
-	ConvarGraphics* convargraphics = new ConvarGraphics();
+	std::shared_ptr <MainCamera> maincamera = std::make_shared < MainCamera>();
+	std::shared_ptr <ConvarGraphics> convargraphics = std::make_shared <ConvarGraphics>();
 	if(ChangeFov)
 	convargraphics->WriteFOV(Fov);
-	ConvarAdmin* convaradmin = new ConvarAdmin();
+	std::shared_ptr <ConvarAdmin> convaradmin = std::make_shared <ConvarAdmin>();
 	convaradmin->ClearVisionInWater(true);
 	if(ChangeTime)
 	convaradmin->SetAdminTime(Time);
-	ConsoleSystem* consolesystem = new ConsoleSystem();
+	std::shared_ptr <ConsoleSystem> consolesystem = std::make_shared <ConsoleSystem>();
 	
 }
 void Intialize()
@@ -65,8 +65,8 @@ void Intialize()
 }
 void MainThread()
 {
-	TODSky* todsky = new TODSky();
-	BaseProjectile* currentweapon = nullptr;
+	std::shared_ptr <TODSky> todsky = std::make_shared<TODSky>();
+	std::shared_ptr <BaseProjectile> currentweapon = nullptr;
 	while (true)
 	{
 
@@ -90,7 +90,7 @@ void MainThread()
 		{
 			BaseLocalPlayer->SetupBeltContainerList(); // this needs to be called to know the active item
 
-			Item* helditem = BaseLocalPlayer->GetActiveItem();
+			std::shared_ptr <Item> helditem = BaseLocalPlayer->GetActiveItem();
 			if (helditem != nullptr)
 				currentweapon = helditem->GetBaseProjectile();
 			if (currentweapon != nullptr && helditem != nullptr)

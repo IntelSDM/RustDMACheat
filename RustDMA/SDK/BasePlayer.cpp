@@ -83,18 +83,18 @@ void BasePlayer::SetupBeltContainerList()
 	{
 		if (objectpointrs[i] == NULL)
 			continue;
-		BeltContainerList.push_back(new Item(objectpointrs[i]));
+		BeltContainerList.push_back(std::make_shared<Item>(objectpointrs[i]));
 	}
 }
 // it appears that we cant get the item class correctly, no idea where the issue lies. 
-Item* BasePlayer::GetActiveItem()
+std::shared_ptr<Item> BasePlayer::GetActiveItem()
 {
 	if (ActiveItemID == 0)
 		return nullptr;
 	if (!IsPlayerValid())
 		return nullptr;
-	Item* founditem = nullptr;
-	for (Item* item : BeltContainerList)
+	std::shared_ptr<Item> founditem = nullptr;
+	for (std::shared_ptr<Item> item : BeltContainerList)
 	{
 		if (item == NULL)
 			continue; // no wasting reads and writes on null pointers
@@ -104,13 +104,8 @@ Item* BasePlayer::GetActiveItem()
 		if (ActiveItemID == activeweaponid)
 		{
 
-		//	printf("Found Item ID: %d\n", activeweaponid);
 			founditem =  item;
-		}
-		else
-		{
-			//printf("None Active Weapon ID: %d\n", activeweaponid);
-			delete item; // DISPOSE OF THE WASTE!!!
+			break;
 		}
 		
 	}

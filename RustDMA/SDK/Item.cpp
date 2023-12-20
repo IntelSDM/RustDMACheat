@@ -22,7 +22,6 @@ Item::Item(uint64_t address)
 }
 Item::~Item()
 {
-	delete BaseProjectileInstance;
 }
 uint32_t Item::GetItemID()
 {
@@ -37,10 +36,10 @@ uint64_t Item::GetHeldEntity()
 	return HeldEntity;
 }
 
-BaseProjectile* Item::GetBaseProjectile()
+std::shared_ptr<BaseProjectile> Item::GetBaseProjectile()
 {
 	if (HeldEntity == 0)
 		return nullptr;
-	BaseProjectileInstance = new BaseProjectile(HeldEntity);
+	BaseProjectileInstance = std::make_shared<BaseProjectile>(HeldEntity);
 	return BaseProjectileInstance;
 }

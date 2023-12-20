@@ -50,7 +50,7 @@ class BasePlayer
 	uint64_t ItemListContents = 0x10; // ItemList + 0x10 is the actual contents of the c# list
 	uint64_t ItemListSize = 0x18; // ItemList + 0x18 is the size of a c# list
 
-	std::vector<Item*> BeltContainerList;
+	std::vector<std::shared_ptr<Item>> BeltContainerList;
 	
 
 public:
@@ -62,7 +62,7 @@ public:
 
 	void UpdateActiveItemID(VMMDLL_SCATTER_HANDLE handle);
 	uint32_t GetActiveItemID();
-	Item* GetActiveItem();
+	std::shared_ptr<Item> GetActiveItem();
 	bool IsPlayerValid();
 	void SetupBeltContainerList();
 };
