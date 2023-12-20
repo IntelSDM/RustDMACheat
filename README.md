@@ -1,7 +1,8 @@
 # Rust DMA Cheat
 A little DMA cheat for Rust. Some basic functions. A basic and easy to update SDK. 
 
-## Media
+
+## Showcase
 <a href="https://youtu.be/oOj10Wa3q3s">
   <img src="https://github.com/IntelSDM/RustDmaCheat/assets/86087830/c7b43c52-b0e8-4a02-a835-46440c84d55e" alt="Play Video" width="700" height="400">
 </a>
@@ -16,7 +17,8 @@ A little DMA cheat for Rust. Some basic functions. A basic and easy to update SD
 </p>
 
 ## Instructions
-Download the [dependencies from memprocfs](https://github.com/ufrisk/MemProcFS/releases). Drag the entire archive into the build folder. 
+* [Installation Guide](./Instructions.md)
+* Updating Guide
 
 ## Features
 * Admin ESP
