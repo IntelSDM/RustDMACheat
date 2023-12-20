@@ -5,9 +5,9 @@
 LocalPlayer::LocalPlayer()
 {
 	printf("[LocalPlayer] Initialized\n");
-	uint64_t localplayer = TargetProcess.Read<uint64_t>(TargetProcess.GetModuleAddress(L"GameAssembly.dll") + Class); // Get Class Start Address
-	printf("[LocalPlayer] LocalPlayer: 0x%llX\n", localplayer);
-	this->StaticField = TargetProcess.Read<uint64_t>(localplayer + StaticField); // Set Static Padding
+	Class = TargetProcess.Read<uint64_t>(TargetProcess.GetModuleAddress(L"GameAssembly.dll") + Class); // Get Class Start Address
+	printf("[LocalPlayer] LocalPlayer: 0x%llX\n", Class);
+	this->StaticField = TargetProcess.Read<uint64_t>(Class + StaticField); // Set Static Padding
 	printf("[LocalPlayer] Static Fields: 0x%llX\n", StaticField);
 	this->BasePlayerValue = TargetProcess.Read<uint64_t>(StaticField + BasePlayerBackingField); // Set BasePlayer Backing Field
 	printf("[LocalPlayer] Base Player: 0x%llX\n", BasePlayerValue);
