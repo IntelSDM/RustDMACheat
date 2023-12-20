@@ -18,7 +18,7 @@ A little DMA cheat for Rust. Some basic functions. A basic and easy to update SD
 
 ## Instructions
 * [Installation Guide](./Instructions.md)
-* Updating Guide
+* [Updating Guide](./Updating.md)
 
 ## Features
 * Admin ESP
