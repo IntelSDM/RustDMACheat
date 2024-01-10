@@ -16,19 +16,19 @@ TODSky::TODSky()
 	DayParameters = TargetProcess.Read<uint64_t>(Instance + DayParameters);
 
 }
-void TODSky::WriteNightLightIntensity(float value)
+void TODSky::WriteNightLightIntensity(VMMDLL_SCATTER_HANDLE handle, float value)
 {
 	
-	if(!TargetProcess.Write<float>(NightParameters + LightIntensityNight, value))
+	if(!TargetProcess.QueueScatterWriteEx<float>(handle,NightParameters + LightIntensityNight, value))
 			printf("[TODSky] Failed to write Night Light Intensity\n");
 }
-void TODSky::WriteNightAmbientMultiplier(float value)
+void TODSky::WriteNightAmbientMultiplier(VMMDLL_SCATTER_HANDLE handle, float value)
 {
-	if(!TargetProcess.Write<float>(NightParameters + AmbientMultiplierNight, value))
+	if(!TargetProcess.QueueScatterWriteEx<float>(handle,NightParameters + AmbientMultiplierNight, value))
 				printf("[TODSky] Failed to write Night Ambient Multiplier\n");
 }
-void TODSky::WriteDayAmbientMultiplier(float value)
+void TODSky::WriteDayAmbientMultiplier(VMMDLL_SCATTER_HANDLE handle, float value)
 {
-	if(!TargetProcess.Write<float>(DayParameters + AmbientMultiplierDay, value))
+	if(!TargetProcess.QueueScatterWriteEx<float>(handle,DayParameters + AmbientMultiplierDay, value))
 					printf("[TODSky] Failed to write Day Ambient Multiplier\n");
 }

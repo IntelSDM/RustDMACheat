@@ -17,7 +17,7 @@ class TODSky
 	uint64_t LightIntensityNight = 0x48; // public float LightIntensity;
 public:
 	TODSky();
-	void WriteNightLightIntensity(float value);
-	void WriteNightAmbientMultiplier(float value);
-	void WriteDayAmbientMultiplier(float value);
+	void WriteNightLightIntensity(VMMDLL_SCATTER_HANDLE handle, float value);
+	void WriteNightAmbientMultiplier(VMMDLL_SCATTER_HANDLE handle, float value);
+	void WriteDayAmbientMultiplier(VMMDLL_SCATTER_HANDLE handle, float value);
 };

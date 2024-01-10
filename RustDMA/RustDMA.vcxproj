@@ -169,6 +169,7 @@
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Memory\DMAHandler.cpp" />
+    <ClCompile Include="Misc\CheatFunction.cpp" />
     <ClCompile Include="Misc\Pch\Pch.cpp" />
     <ClCompile Include="SDK\BaseMovement.cpp" />
     <ClCompile Include="SDK\BaseNetworkable.cpp" />
@@ -185,6 +186,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Memory\DMAHandler.h" />
+    <ClInclude Include="Misc\CheatFunction.h" />
     <ClInclude Include="Misc\Pch\Pch.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="SDK\BaseMovement.h" />

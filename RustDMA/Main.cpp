@@ -11,6 +11,7 @@
 #include "BasePlayer.h"
 #include "TODSky.h"
 #include "BaseProjectile.h"
+#include "CheatFunction.h"
 DMAHandler TargetProcess = DMAHandler(L"RustClient.exe");
 std::shared_ptr<BasePlayer> BaseLocalPlayer = nullptr;
 void MainThread();
@@ -22,7 +23,7 @@ bool ChangeFov = false;
 int Fov = 100;
 bool ChangeTime = false;
 int Time = 12;
-bool BrightNight = false;
+bool BrightNight = true;
 bool BrightCaves = false;
 bool AdminEsp = false;
 // each time we reinitialize localplayer
@@ -64,63 +65,85 @@ void Intialize()
 	SetupCvars();
 	MainThread();
 }
-void MainThread()
-{
-	std::shared_ptr <TODSky> todsky = std::make_shared<TODSky>();
-	std::shared_ptr <BaseProjectile> currentweapon = nullptr;
-	while (true)
-	{
-
-		auto handle = TargetProcess.CreateScatterHandle();
-		// spiderman
-		if (SpiderMan)
-		{
-			BaseLocalPlayer->GetBaseMovement()->WriteGroundAngle(handle, 0.0f);
-			BaseLocalPlayer->GetBaseMovement()->WriteGroundAngleNew(handle, 0.0f);
-			BaseLocalPlayer->GetBaseMovement()->WriteMaxAngleClimbing(handle, 999.0f);
-			BaseLocalPlayer->GetBaseMovement()->WriteMaxAngleWalking(handle, 999.0f);
-		}
+std::shared_ptr <TODSky> TODSkyInstance;
+auto MainLoopScatter = TargetProcess.CreateScatterHandle();
+int ScatterCount = 0;
+std::shared_ptr<CheatFunction> SkyMods = std::make_shared<CheatFunction>(7, []() {
 	
-		if(NoRecoil)
-		BaseLocalPlayer->UpdateActiveItemID(handle);// held weapon
+	//This needs to be done in a fast af loop, Heavily intensive
+	if (BrightNight)
+	{
+		ScatterCount++;
+		TODSkyInstance->WriteNightLightIntensity(MainLoopScatter,25.0f);
+		TODSkyInstance->WriteNightAmbientMultiplier(MainLoopScatter,4.0f);
+	}
+	if (BrightCaves)
+	{
+		ScatterCount++;
+		TODSkyInstance->WriteDayAmbientMultiplier(MainLoopScatter,2.0f);
+	}
 
-		TargetProcess.ExecuteScatterWrite(handle);
-		TargetProcess.CloseScatterHandle(handle);
-		if (NoRecoil)
+	});
+
+
+std::shared_ptr<CheatFunction> MovementMods = std::make_shared<CheatFunction>(50, []() {
+
+	if (SpiderMan)
+	{
+		ScatterCount++;
+		BaseLocalPlayer->GetBaseMovement()->WriteGroundAngle(MainLoopScatter, 0.0f);
+		BaseLocalPlayer->GetBaseMovement()->WriteGroundAngleNew(MainLoopScatter, 0.0f);
+		BaseLocalPlayer->GetBaseMovement()->WriteMaxAngleClimbing(MainLoopScatter, 999.0f);
+		BaseLocalPlayer->GetBaseMovement()->WriteMaxAngleWalking(MainLoopScatter, 999.0f);
+	}
+	});
+std::shared_ptr<CheatFunction> HotbarUpdater = std::make_shared<CheatFunction>(100, []() {
+
+	if (NoRecoil)
+		BaseLocalPlayer->UpdateActiveItemID(MainLoopScatter);// held weapon
+	});
+std::shared_ptr <BaseProjectile> CurrentWeapon = nullptr;
+std::shared_ptr<CheatFunction> WeaponMods = std::make_shared<CheatFunction>(100, []() {
+	if (NoRecoil)
+	{
+		BaseLocalPlayer->SetupBeltContainerList(); // this needs to be called to know the active item
+
+		std::shared_ptr <Item> helditem = BaseLocalPlayer->GetActiveItem();
+		if (helditem != nullptr)
+			CurrentWeapon = helditem->GetBaseProjectile();
+		if (CurrentWeapon != nullptr && helditem != nullptr)
 		{
-			BaseLocalPlayer->SetupBeltContainerList(); // this needs to be called to know the active item
-
-			std::shared_ptr <Item> helditem = BaseLocalPlayer->GetActiveItem();
-			if (helditem != nullptr)
-				currentweapon = helditem->GetBaseProjectile();
-			if (currentweapon != nullptr && helditem != nullptr)
+			if (CurrentWeapon->IsValidWeapon())
 			{
-				if (currentweapon->IsValidWeapon())
+				uint32_t itemid = helditem->GetItemID();
+				if (itemid != 0 && helditem != nullptr)
 				{
-					uint32_t itemid = helditem->GetItemID();
-					if (itemid != 0 && helditem != nullptr)
-					{
 
-						currentweapon->WriteRecoilPitch(itemid, RecoilReduction);
-						currentweapon->WriteRecoilYaw(itemid, RecoilReduction);
-					}
+					CurrentWeapon->WriteRecoilPitch(itemid, RecoilReduction);
+					CurrentWeapon->WriteRecoilYaw(itemid, RecoilReduction);
 				}
 			}
 		}
+	}
+	});
+void MainThread()
+{
+	TODSkyInstance = std::make_shared<TODSky>();
+	
+	while (true)
+	{
+	
+		MainLoopScatter = TargetProcess.CreateScatterHandle();
+		// spiderman
+		MovementMods->Execute();
+		HotbarUpdater->Execute();
+		SkyMods->Execute();
+		if(ScatterCount > 0)
+		TargetProcess.ExecuteScatterWrite(MainLoopScatter);
+		TargetProcess.CloseScatterHandle(MainLoopScatter);
+		ScatterCount = 0;
+		WeaponMods->Execute();
 		
-		//This needs to be done in a fast af loop, Heavily intensive
-		if (BrightNight)
-		{
-			todsky->WriteNightLightIntensity(25.0f);
-			todsky->WriteNightAmbientMultiplier(4.0f);
-		}
-		if (BrightCaves)
-		{
-			todsky->WriteDayAmbientMultiplier(2.0f);
-		}
-
-
-		Sleep(10);
 	}
 }
 void main()
