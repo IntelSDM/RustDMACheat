@@ -7,12 +7,15 @@ std::map<uint32_t, float> OriginalRecoilPitchMin;
 std::map<uint32_t, float> OriginalRecoilPitchMax;
 std::map<uint32_t, float> OriginalRecoilYawMin;
 std::map<uint32_t, float> OriginalRecoilYawMax;
+std::map<uint32_t,bool> RejectedItems;
 BaseProjectile::BaseProjectile(uint64_t address)
 {
 //	printf("[BaseProjectile] Initialized\n");
 	this->Class = address;
 	//printf("[BaseProjectile] Class: 0x%llX\n", Class);
 	this->RecoilProperties = TargetProcess.Read<uint64_t>(Class + RecoilProperties);
+	if (RecoilProperties == 0)
+		return;
 	//printf("[BaseProjectile] RecoilProperties: 0x%llX\n", RecoilProperties);
 	if (IsValidWeapon())
 	{
@@ -30,12 +33,22 @@ bool BaseProjectile::IsValidWeapon()
 
 void BaseProjectile::WriteRecoilYaw(uint32_t itemid, int percent)
 {
-	if (OriginalRecoilYawMin.find(itemid) == OriginalRecoilYawMin.end())
+	if (OriginalRecoilYawMin.find(itemid) == OriginalRecoilYawMin.end() && !RejectedItems.contains(itemid)) // save on reads 
 	{
 		OriginalRecoilYawMin[itemid] = TargetProcess.Read<float>(RecoilOverride + RecoilYawMin);
 		OriginalRecoilYawMax[itemid] = TargetProcess.Read<float>(RecoilOverride + RecoilYawMax);
 		printf("[BaseProjectile] RecoilYawMin: %f\n", OriginalRecoilYawMin[itemid]);
 		printf("[BaseProjectile] RecoilYawMax: %f\n", OriginalRecoilYawMax[itemid]);
+		if (OriginalRecoilYawMin[itemid] == 0 && OriginalRecoilYawMax[itemid] == 0)
+		{
+			RejectedItems[itemid] = true;
+			printf("[BaseProjectile] Rejected ItemID: %d\n", itemid);
+			return;
+		}
+	}
+	if (RejectedItems.contains(itemid))
+	{
+		return;
 	}
 	float yawmin = OriginalRecoilYawMin[itemid];
 	float yawmax = OriginalRecoilYawMax[itemid];
@@ -49,12 +62,22 @@ void BaseProjectile::WriteRecoilYaw(uint32_t itemid, int percent)
 
 void BaseProjectile::WriteRecoilPitch(uint32_t itemid, int percent)
 {
-	if (OriginalRecoilPitchMin.find(itemid) == OriginalRecoilPitchMin.end())
+	if (OriginalRecoilPitchMin.find(itemid) == OriginalRecoilPitchMin.end() && !RejectedItems.contains(itemid))
 	{
 		OriginalRecoilPitchMin[itemid] = TargetProcess.Read<float>(RecoilOverride + RecoilPitchMin);
 		OriginalRecoilPitchMax[itemid] = TargetProcess.Read<float>(RecoilOverride + RecoilPitchMax);
 		printf("[BaseProjectile] RecoilPitchMin: %f\n", OriginalRecoilPitchMin[itemid]);
 		printf("[BaseProjectile] RecoilPitchMax: %f\n", OriginalRecoilPitchMax[itemid]);
+		if (OriginalRecoilPitchMin[itemid] == 0 && OriginalRecoilPitchMax[itemid] == 0)
+		{
+			RejectedItems[itemid] = true;
+			printf("[BaseProjectile] Rejected ItemID: %d\n", itemid);
+			return;
+		}
+	}
+	if (RejectedItems.contains(itemid))
+	{
+		return;
 	}
 	float pitchmin = OriginalRecoilPitchMin[itemid];
 	float pitchmax = OriginalRecoilPitchMax[itemid];
