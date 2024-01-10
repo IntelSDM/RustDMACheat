@@ -32,11 +32,11 @@ PlayerFlags BasePlayer::GetPlayerFlag()
 	printf("[BasePlayer] PlayerFlag: %d\n", flag);
 	return flag;
 }
-void BasePlayer::WritePlayerFlag(VMMDLL_SCATTER_HANDLE handle, PlayerFlags flag)
+void BasePlayer::WritePlayerFlag(PlayerFlags flag)
 {
 	if (!IsPlayerValid())
 		return;
-	if(!TargetProcess.QueueScatterWriteEx<PlayerFlags>(handle,Class + PlayerFlag,flag))
+	if(!TargetProcess.Write<PlayerFlags>(Class + PlayerFlag,flag))
 			printf("[BasePlayer] Failed to write PlayerFlag\n");
 }
 uint32_t BasePlayer::GetActiveItemID()

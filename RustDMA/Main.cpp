@@ -14,17 +14,17 @@
 DMAHandler TargetProcess = DMAHandler(L"RustClient.exe");
 std::shared_ptr<BasePlayer> BaseLocalPlayer = nullptr;
 void MainThread();
-bool SpiderMan = false;
+bool SpiderMan = true;
 bool NoRecoil = true;
 int RecoilReduction = 25;
 bool AdminFlag = true;
-bool ChangeFov = true;
+bool ChangeFov = false;
 int Fov = 100;
-bool ChangeTime = true;
+bool ChangeTime = false;
 int Time = 12;
 bool BrightNight = false;
 bool BrightCaves = false;
-bool AdminEsp = true;
+bool AdminEsp = false;
 // each time we reinitialize localplayer
 void PerServerVariables()
 {
@@ -49,7 +49,8 @@ void SetupCvars()
 	if(ChangeTime)
 	convaradmin->SetAdminTime(Time);
 	std::shared_ptr <ConsoleSystem> consolesystem = std::make_shared <ConsoleSystem>();
-	
+	if (AdminFlag)
+		BaseLocalPlayer->WritePlayerFlag(PlayerFlags::IsAdmin);
 }
 void Intialize()
 {
@@ -79,8 +80,7 @@ void MainThread()
 			BaseLocalPlayer->GetBaseMovement()->WriteMaxAngleClimbing(handle, 999.0f);
 			BaseLocalPlayer->GetBaseMovement()->WriteMaxAngleWalking(handle, 999.0f);
 		}
-		if(AdminFlag)
-		BaseLocalPlayer->WritePlayerFlag(handle, PlayerFlags::IsAdmin); 
+	
 		if(NoRecoil)
 		BaseLocalPlayer->UpdateActiveItemID(handle);// held weapon
 

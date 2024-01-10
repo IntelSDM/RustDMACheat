@@ -57,7 +57,7 @@ public:
 	BasePlayer(uint64_t address);
 	~BasePlayer();
 	PlayerFlags GetPlayerFlag();
-	void WritePlayerFlag(VMMDLL_SCATTER_HANDLE handle, PlayerFlags flag);
+	void WritePlayerFlag(PlayerFlags flag);
 	BaseMovement* GetBaseMovement();
 
 	void UpdateActiveItemID(VMMDLL_SCATTER_HANDLE handle);
