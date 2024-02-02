@@ -17,12 +17,11 @@ BasePlayer::BasePlayer(uint64_t address)
 	printf("[BasePlayer] BaseMovement: 0x%llX\n", BaseMovementOffset);
 	printf("[BasePlayer] ActiveItemID: 0x%llX\n", ActiveItemID);
 //	printf("[BasePlayer] PlayerInventory: 0x%llX\n", PlayerInventoryOffset);
-	this->BaseMovementInstance = new BaseMovement(BaseMovementOffset);
+	this->BaseMovementInstance = std::make_shared<BaseMovement>(BaseMovementOffset);
 	ContainerBelt = TargetProcess.Read<uint64_t>(PlayerInventory + ContainerBelt);
 }
 BasePlayer::~BasePlayer()
 {
-	delete BaseMovementInstance;
 }
 PlayerFlags BasePlayer::GetPlayerFlag()
 {
@@ -48,7 +47,7 @@ void BasePlayer::UpdateActiveItemID(VMMDLL_SCATTER_HANDLE handle)
 {
 	TargetProcess.QueueScatterReadEx(handle, Class + ActiveItemIDOffset, reinterpret_cast<void*>(&ActiveItemID), sizeof(uint64_t));
 }
-BaseMovement* BasePlayer::GetBaseMovement()
+std::shared_ptr<BaseMovement> BasePlayer::GetBaseMovement()
 {
 	return BaseMovementInstance;
 }

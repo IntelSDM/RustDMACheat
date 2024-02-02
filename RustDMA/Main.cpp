@@ -23,9 +23,9 @@ bool ChangeFov = false;
 int Fov = 100;
 bool ChangeTime = false;
 int Time = 12;
-bool BrightNight = true;
+bool BrightNight = false;
 bool BrightCaves = false;
-bool AdminEsp = false;
+bool AdminEsp = true;
 // each time we reinitialize localplayer
 void PerServerVariables()
 {

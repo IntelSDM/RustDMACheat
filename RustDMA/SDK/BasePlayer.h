@@ -35,11 +35,11 @@ enum class PlayerFlags : uint32_t
 class BasePlayer
 {
 	uint64_t Class = 0;
-	uint64_t PlayerFlag = 0x8C8; // 	public global::BasePlayer.PlayerFlags playerFlags;
-	uint64_t BaseMovementOffset = 0x6A0; // public BaseMovement movement;
-	uint64_t PlayerInventory = 0x8D8; // public global::PlayerInventory inventory;
-	uint64_t ActiveItemIDOffset = 0x7D0; // private ItemId clActiveItem;
-	BaseMovement* BaseMovementInstance;
+	uint64_t PlayerFlag = 0x8D8; // 	public global::BasePlayer.PlayerFlags playerFlags;
+	uint64_t BaseMovementOffset = 0x6A8; // public BaseMovement movement;
+	uint64_t PlayerInventory = 0x8E8; // public global::PlayerInventory inventory;
+	uint64_t ActiveItemIDOffset = 0x7E0; // private ItemId clActiveItem;
+	std::shared_ptr<BaseMovement> BaseMovementInstance;
 
 
 	uint32_t ActiveItemID = 0;
@@ -58,7 +58,7 @@ public:
 	~BasePlayer();
 	PlayerFlags GetPlayerFlag();
 	void WritePlayerFlag(PlayerFlags flag);
-	BaseMovement* GetBaseMovement();
+	std::shared_ptr<BaseMovement> GetBaseMovement();
 
 	void UpdateActiveItemID(VMMDLL_SCATTER_HANDLE handle);
 	uint32_t GetActiveItemID();
