@@ -9,6 +9,18 @@ Download The Latest [MemProcFS Release](https://github.com/ufrisk/MemProcFS/rele
     style="width: 85%;" />
 </p>
 Drag And Drop The Contents Into The Build Directory.<br>
+
+
+[Download the FTD3xx Dlls](https://ftdichip.com/wp-content/uploads/2024/01/FTD3XXLibrary_v1.3.0.9.zip)
+In the .rar file navigate to FTD3XXLibrary->x64->DLL
+
+<p align="Left">
+  <img src="https://github.com/IntelSDM/RustDMACheat/assets/86087830/3a26c1d1-689f-48a5-897a-ca873e74b89e"
+    style="width: 75%;" />
+</p>
+Drop them into the build directory.<br>
+
+
 Before:
 <p align="Left">
   <img src="https://github.com/IntelSDM/RustDmaCheat/assets/86087830/b08eeae5-c537-47f9-bf6f-f4a82a376d07"
