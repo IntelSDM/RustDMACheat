@@ -8,7 +8,7 @@ void ConsoleSystem::DisableCommand(uint64_t command)
 	uintptr_t commandname = TargetProcess.Read<uint64_t>(command + Name);
 	
 	wchar_t commandstring[36] = { '\0' };
-	TargetProcess.Read((ULONG64)commandname + 0x14, (ULONG64) &commandstring, sizeof(commandstring));
+	TargetProcess.Read((ULONG64)commandname + 0x14, reinterpret_cast<void*>( & commandstring), sizeof(commandstring));
 	for (std::wstring blacklistedcommand : BlacklistedCommands)
 	{
 		if (wcscmp(commandstring, blacklistedcommand.c_str()) == 0)
@@ -28,7 +28,7 @@ void ConsoleSystem::DisableCommand(uint64_t command)
 ConsoleSystem::ConsoleSystem()
 {
 	printf("[ConsoleSystem] Initialized\n");
-	uint64_t server = TargetProcess.Read<uint64_t>(TargetProcess.GetModuleAddress(L"GameAssembly.dll") + Class); // Get Class Start Address
+	uint64_t server = TargetProcess.Read<uint64_t>(TargetProcess.GetBaseAddress(LIT("GameAssembly.dll")) + Class); // Get Class Start Address
 	printf("[ConsoleSystem] ConvarAdmin: 0x%llX\n", server);
 	this->StaticField = TargetProcess.Read<uint64_t>(server + StaticField); // Set Static Padding
 	printf("[ConsoleSystem] Static Fields: 0x%llX\n", StaticField);

@@ -4,7 +4,7 @@
 
 BaseNetworkable::BaseNetworkable()
 {
-	uint64_t networkable = TargetProcess.Read<uint64_t>(TargetProcess.GetModuleAddress(L"GameAssembly.dll") + Class); // Get Class Start Address
+	uint64_t networkable = TargetProcess.Read<uint64_t>(TargetProcess.GetBaseAddress(LIT("GameAssembly.dll")) + Class); // Get Class Start Address
 	printf("[BaseNetworkable] BaseNetworkable: 0x%llX\n", networkable);
 	this->StaticField = TargetProcess.Read<uint64_t>(networkable + StaticField); // Set Static Padding
 	printf("[BaseNetworkable] Static Fields: 0x%llX\n", StaticField);
@@ -30,7 +30,7 @@ void BaseNetworkable::ItterateEntities()
 		uint64_t prefab = TargetProcess.Read<uint64_t>(object + 0x60); 
 		WORD tag = TargetProcess.Read<WORD>(object + 0x54);
 		char buff[256] = { 0 };
-		TargetProcess.Read(prefab,reinterpret_cast<ULONG64>(buff),256);// access name from heap. 
+		TargetProcess.Read(prefab,reinterpret_cast<void*>(buff),sizeof(buff));// access name from heap. 
 		std::string prefabname = buff;
 		std::cout << "[BaseNetworkable] PrefabName: " << prefabname << std::endl;
 		std::cout << "[BaseNetworkable] Tag: " << tag << std::endl;

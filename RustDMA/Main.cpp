@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Globals.h"
-#include "DMAHandler.h"
+#include "memory.h"
 #include "OcclusionCulling.h"
 #include "MainCamera.h"
 #include "ConvarGraphics.h"
@@ -12,7 +12,8 @@
 #include "TODSky.h"
 #include "BaseProjectile.h"
 #include "CheatFunction.h"
-DMAHandler TargetProcess = DMAHandler(L"RustClient.exe");
+#include "Init.h"
+#include "GUI.h"
 std::shared_ptr<BasePlayer> BaseLocalPlayer = nullptr;
 void MainThread();
 bool SpiderMan = true;
@@ -148,26 +149,77 @@ void MainThread()
 }
 void main()
 {
-	AllocConsole();
-	if (!TargetProcess.IsInitialized())
+	if (!TargetProcess.Init("RustClient.exe"))
 	{
-		DebugBreak();
-		std::printf("Unable To Connect To FPGA Device");
+		printf("Failed to initialize process\n");
+		return;
 	}
-	//is the PID valid?
-	if (!TargetProcess.GetPID())
+	TargetProcess.GetBaseAddress("GameAssembly.dll");
+}
+LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	InputWndProc(hWnd, message, wParam, lParam);
+	switch (message)
 	{
-		std::printf("Game Isn't Open");
-		Sleep(1000);
-		TargetProcess = DMAHandler(L"RustClient.exe");
+	case WM_DESTROY:
+		PostQuitMessage(0);
+		return 0;
+		break;
 	}
-	std::printf("PID: %X\n", TargetProcess.GetPID());
-	TargetProcess.FixDTB();
-	std::printf("Base Address: 0x%X\n", TargetProcess.GetBaseAddress());
-	std::printf("Game Assembly: 0x%X\n", TargetProcess.GetModuleAddress(L"GameAssembly.dll"));
-	std::printf("Unity Player: 0x%X\n", TargetProcess.GetModuleAddress(L"UnityPlayer.dll"));
 
-	Intialize();
-	//BaseNetworkable* basenetworkable = new BaseNetworkable();
-	//basenetworkable->ItterateEntities();
+	return DefWindowProc(hWnd, message, wParam, lParam);
+}
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+{
+	HWND hWnd;
+	WNDCLASSEX wc;
+	AllocConsole();
+	FILE* fDummy;
+	freopen_s(&fDummy, LIT("CONIN$"), LIT("r"), stdin);
+	freopen_s(&fDummy, LIT("CONOUT$"), LIT("w"), stderr);
+	freopen_s(&fDummy, LIT("CONOUT$"), LIT("w"), stdout);
+	printf(LIT("Debugging Window:\n"));
+
+	main();
+	ZeroMemory(&wc, sizeof(WNDCLASSEX));
+	wc.cbSize = sizeof(WNDCLASSEX);
+	wc.style = CS_HREDRAW | CS_VREDRAW;
+	wc.lpfnWndProc = WindowProc;
+	wc.hInstance = hInstance;
+	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+	wc.hbrBackground = (HBRUSH)COLOR_WINDOW;
+	wc.lpszClassName = L"GUI Framework";
+	RegisterClassEx(&wc);
+
+	hWnd = CreateWindowEx(WS_EX_APPWINDOW, wc.lpszClassName, L"GUI Framework",
+		WS_POPUP,
+		0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), NULL, NULL, hInstance, NULL);
+
+	if (!hWnd)
+		return -1;
+
+
+	SetLayeredWindowAttributes(hWnd, RGB(0, 0, 0), 255, LWA_ALPHA);
+
+	ShowWindow(hWnd, nCmdShow);
+
+	InitD2D(hWnd);
+	CreateGUI();
+	MSG msg;
+	SetProcessDPIAware();
+	SetInput();
+	while (TRUE)
+	{
+		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+
+			if (msg.message == WM_QUIT)
+				break;
+		}
+		RenderFrame();
+	}
+	CleanD2D();
+	return msg.wParam;
 }

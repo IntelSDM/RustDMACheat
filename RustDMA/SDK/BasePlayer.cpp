@@ -9,9 +9,9 @@ BasePlayer::BasePlayer(uint64_t address)
 		return; // invalid
 	printf("[BasePlayer] Initialized\n");
 	auto handle = TargetProcess.CreateScatterHandle();
-	TargetProcess.QueueScatterReadEx(handle,Class + BaseMovementOffset, reinterpret_cast<void*>(&BaseMovementOffset),sizeof(uint64_t));
-	TargetProcess.QueueScatterReadEx(handle, Class + ActiveItemIDOffset, reinterpret_cast<void*>(&ActiveItemID), sizeof(uint32_t));
-	TargetProcess.QueueScatterReadEx(handle, Class + PlayerInventory, reinterpret_cast<void*>(&PlayerInventory), sizeof(uint64_t));
+	TargetProcess.AddScatterReadRequest(handle,Class + BaseMovementOffset, reinterpret_cast<void*>(&BaseMovementOffset),sizeof(uint64_t));
+	TargetProcess.AddScatterReadRequest(handle, Class + ActiveItemIDOffset, reinterpret_cast<void*>(&ActiveItemID), sizeof(uint32_t));
+	TargetProcess.AddScatterReadRequest(handle, Class + PlayerInventory, reinterpret_cast<void*>(&PlayerInventory), sizeof(uint64_t));
 	TargetProcess.ExecuteScatterRead(handle);
 	TargetProcess.CloseScatterHandle(handle);
 	printf("[BasePlayer] BaseMovement: 0x%llX\n", BaseMovementOffset);
@@ -45,7 +45,7 @@ uint32_t BasePlayer::GetActiveItemID()
 // call this in the local player loop to keep the value updated as it changes depending on the item
 void BasePlayer::UpdateActiveItemID(VMMDLL_SCATTER_HANDLE handle)
 {
-	TargetProcess.QueueScatterReadEx(handle, Class + ActiveItemIDOffset, reinterpret_cast<void*>(&ActiveItemID), sizeof(uint64_t));
+	TargetProcess.AddScatterReadRequest(handle, Class + ActiveItemIDOffset, reinterpret_cast<void*>(&ActiveItemID), sizeof(uint64_t));
 }
 std::shared_ptr<BaseMovement> BasePlayer::GetBaseMovement()
 {
@@ -60,9 +60,9 @@ void BasePlayer::SetupBeltContainerList()
 	uint64_t itemlist = TargetProcess.Read<uint64_t>(ContainerBelt + ItemList); // yeah you need to reread this constantly, if you don't hell breaks loose. 
 	auto handle = TargetProcess.CreateScatterHandle();
 	uint64_t items = 0;
-	TargetProcess.QueueScatterReadEx(handle, itemlist + ItemListContents, reinterpret_cast<void*>(&items), sizeof(uint64_t));
+	TargetProcess.AddScatterReadRequest(handle, itemlist + ItemListContents, reinterpret_cast<void*>(&items), sizeof(uint64_t));
 	uint32_t itemsize = 0;
-	TargetProcess.QueueScatterReadEx(handle, itemlist + ItemListSize, reinterpret_cast<void*>(&itemsize), sizeof(uint32_t));
+	TargetProcess.AddScatterReadRequest(handle, itemlist + ItemListSize, reinterpret_cast<void*>(&itemsize), sizeof(uint32_t));
 	TargetProcess.ExecuteScatterRead(handle);
 	TargetProcess.CloseScatterHandle(handle);
 	BeltContainerList.resize(itemsize);
@@ -74,7 +74,7 @@ void BasePlayer::SetupBeltContainerList()
 	handle = TargetProcess.CreateScatterHandle();
 	for (int i = 0; i < itemsize; i++)
 	{
-		TargetProcess.QueueScatterReadEx(handle, items + 0x20 + (i * 0x8), reinterpret_cast<void*>(&objectpointrs[i]), sizeof(uint64_t));
+		TargetProcess.AddScatterReadRequest(handle, items + 0x20 + (i * 0x8), reinterpret_cast<void*>(&objectpointrs[i]), sizeof(uint64_t));
 	}
 	TargetProcess.ExecuteScatterRead(handle);
 	TargetProcess.CloseScatterHandle(handle);

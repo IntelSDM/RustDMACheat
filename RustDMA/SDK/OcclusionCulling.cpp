@@ -4,7 +4,7 @@
 OcclusionCulling::OcclusionCulling()
 {
 	printf("[OcclusionCulling] Initialized\n");
-	uint64_t convarculling = TargetProcess.Read<uint64_t>(TargetProcess.GetModuleAddress(L"GameAssembly.dll") + Class); // Get Class Start Address
+	uint64_t convarculling = TargetProcess.Read<uint64_t>(TargetProcess.GetBaseAddress(LIT("GameAssembly.dll")) + Class); // Get Class Start Address
 	printf("[OcclusionCulling] OcclusionCulling: 0x%llX\n", convarculling);
 	this->StaticField = TargetProcess.Read<uint64_t>(convarculling + StaticField); // Set Static Padding
 	printf("[OcclusionCulling] Static Fields: 0x%llX\n", StaticField);
