@@ -80,6 +80,14 @@ void CreateGUI()
 		});
 	form->Push(changetime);
 	auto time = std::make_shared<Slider<int>>(10, 175, 150, LIT(L"Time"), LIT(L"°"), 0, 24, &ConfigInstance.Misc.Time);
+	time->SetValueChangedEvent([]()
+		{
+			std::shared_ptr<ConvarAdmin> convaradmin = std::make_shared<ConvarAdmin>();
+			if (ConfigInstance.Misc.ChangeTime)
+				convaradmin->SetAdminTime(ConfigInstance.Misc.Time);
+			else
+				convaradmin->SetAdminTime(-1);
+		});
 	form->Push(time);
 	auto changefov = std::make_shared<Toggle>(10, 200, LIT(L"Change FOV"), &ConfigInstance.Misc.ChangeFov);
 	changefov->SetValueChangedEvent([]()
@@ -90,6 +98,12 @@ void CreateGUI()
 		});
 	form->Push(changefov);
 	auto fovamount = std::make_shared<Slider<int>>(10, 220, 150, LIT(L"FOV Amount"), LIT(L"°"), 0, 150, &ConfigInstance.Misc.Fov);
+	fovamount->SetValueChangedEvent([]()
+		{
+			std::shared_ptr<ConvarGraphics> graphics = std::make_shared<ConvarGraphics>();
+			if (ConfigInstance.Misc.ChangeFov)
+				graphics->WriteFOV(ConfigInstance.Misc.Fov);
+		});
 	form->Push(fovamount);
 	auto brightnights = std::make_shared<Toggle>(10, 245, LIT(L"Bright Nights"), &ConfigInstance.Misc.BrightNights);
 	form->Push(brightnights);

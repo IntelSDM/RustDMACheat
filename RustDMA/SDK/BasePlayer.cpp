@@ -17,9 +17,6 @@ BasePlayer::BasePlayer(uint64_t address,VMMDLL_SCATTER_HANDLE handle)
 	TargetProcess.AddScatterReadRequest(handle, Class + DestroyedOffset, reinterpret_cast<void*>(&Destroyed), sizeof(bool));
 	TargetProcess.AddScatterReadRequest(handle, Class + PlayerFlag, reinterpret_cast<void*>(&ActiveFlag), sizeof(bool));
 
-
-	this->BaseMovementInstance = std::make_shared<BaseMovement>(BaseMovementOffset);
-
 }
 void BasePlayer::InitializePlayerList()
 {
@@ -39,6 +36,8 @@ void BasePlayer::CacheStage1(VMMDLL_SCATTER_HANDLE handle)
 	TargetProcess.AddScatterReadRequest(handle, DisplayName + 0x14, reinterpret_cast<void*>(&PlayerName), sizeof(PlayerName));
 	TargetProcess.AddScatterReadRequest(handle, PlayerModel + IsNPCOffset, reinterpret_cast<void*>(&NPC), sizeof(bool));
 	TargetProcess.AddScatterReadRequest(handle, PlayerInventory + ContainerBelt, reinterpret_cast<void*>(&ContainerBelt),sizeof(uint64_t));
+	this->BaseMovementInstance = std::make_shared<BaseMovement>(BaseMovementOffset);
+
 }
 void BasePlayer::CachePlayers()
 {

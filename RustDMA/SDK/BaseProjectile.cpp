@@ -54,10 +54,8 @@ void BaseProjectile::WriteRecoilYaw(VMMDLL_SCATTER_HANDLE handle, uint32_t itemi
 	float yawmax = OriginalRecoilYawMax[itemid];
 	float yawminpercent = yawmin * (percent / 100.0f);
 	float yawmaxpercent = yawmax * (percent / 100.0f);
-	if (!TargetProcess.AddScatterWriteRequest<float>(handle,RecoilOverride + RecoilYawMin, yawminpercent))
-		printf("[BaseProjectile] Failed to write RecoilYawMin\n");
-	if (!TargetProcess.AddScatterWriteRequest<float>(handle,RecoilOverride + RecoilYawMax, yawmaxpercent))
-		printf("[BaseProjectile] Failed to write RecoilYawMax\n");
+	TargetProcess.AddScatterWriteRequest<float>(handle, RecoilOverride + RecoilYawMin, yawminpercent);
+	TargetProcess.AddScatterWriteRequest<float>(handle,RecoilOverride + RecoilYawMax, yawmaxpercent);
 }
 
 void BaseProjectile::WriteRecoilPitch(VMMDLL_SCATTER_HANDLE handle, uint32_t itemid, int percent)
@@ -83,8 +81,6 @@ void BaseProjectile::WriteRecoilPitch(VMMDLL_SCATTER_HANDLE handle, uint32_t ite
 	float pitchmax = OriginalRecoilPitchMax[itemid];
 	float pitchminpercent = pitchmin * (percent / 100.0f);
 	float pitchmaxpercent = pitchmax * (percent / 100.0f);		
-	if (!TargetProcess.AddScatterWriteRequest<float>(handle,RecoilOverride + RecoilPitchMin, pitchminpercent))
-		printf("[BaseProjectile] Failed to write RecoilPitchMin\n");
-	if (!TargetProcess.AddScatterWriteRequest<float>(handle,RecoilOverride + RecoilPitchMax, pitchmaxpercent))
-		printf("[BaseProjectile] Failed to write RecoilPitchMax\n");
+	TargetProcess.AddScatterWriteRequest<float>(handle, RecoilOverride + RecoilPitchMin, pitchminpercent);
+	TargetProcess.AddScatterWriteRequest<float>(handle, RecoilOverride + RecoilPitchMax, pitchmaxpercent);
 }
