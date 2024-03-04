@@ -227,3 +227,18 @@ Vector3 BasePlayer::GetPosition()
 {
 	return TransformPosition;
 }
+void BasePlayer::UpdatePose(VMMDLL_SCATTER_HANDLE handle)
+{
+	TargetProcess.AddScatterReadRequest(handle, ModelState + PoseType, reinterpret_cast<void*>(&Pose), sizeof(int));
+}
+void BasePlayer::WritePose(int pose)
+{
+	if (!IsPlayerValid())
+		return;
+	if (!TargetProcess.Write<int>(ModelState + PoseType, pose))
+		printf("[BasePlayer] Failed to write Pose\n");
+}
+int BasePlayer::GetPose()
+{
+	return Pose;
+}

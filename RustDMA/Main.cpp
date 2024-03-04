@@ -17,6 +17,8 @@
 #include "Configinstance.h"
 std::shared_ptr<BasePlayer> BaseLocalPlayer = nullptr;
 std::shared_ptr<MainCamera> Camera = nullptr;
+std::shared_ptr<ConsoleSystem> Console = nullptr;
+std::shared_ptr<TODSky> Sky = nullptr;
 bool SpiderMan = true;
 bool NoRecoil = true;
 int RecoilReduction = 25;
@@ -60,6 +62,9 @@ void SetupCvars()
 		convaradmin->SetAdminTime(ConfigInstance.Misc.Time);
 	else
 		convaradmin->SetAdminTime(-1);
+	std::shared_ptr<ConvarGraphics> graphics = std::make_shared<ConvarGraphics>();
+	if (ConfigInstance.Misc.ChangeFov)
+		graphics->WriteFOV(ConfigInstance.Misc.Fov);
 
 	/*std::shared_ptr < OcclusionCulling> occlusionculling = std::make_shared <OcclusionCulling>();
 	if (AdminEsp)
@@ -83,10 +88,52 @@ std::shared_ptr<CheatFunction> CachePlayers = std::make_shared<CheatFunction>(20
 		BaseLocalPlayer->CachePlayers();
 	});
 
+std::shared_ptr<CheatFunction> UpdateLocalPlayer = std::make_shared<CheatFunction>(300, []() {
+	if (ConfigInstance.Misc.AdminFlag)
+	{
+		auto handle = TargetProcess.CreateScatterHandle();
+		BaseLocalPlayer->UpdatePose(handle);
+		TargetProcess.ExecuteReadScatter(handle);
+		TargetProcess.CloseScatterHandle(handle);
+
+		if ((BaseLocalPlayer->GetPose() & (int)4) != (int)4)
+		{
+			if (Console == nullptr)
+			{
+				Console = std::make_shared<ConsoleSystem>();
+
+			}
+			BaseLocalPlayer->WritePose(BaseLocalPlayer->GetPose() + 4);
+		}
+	}
+	});
+std::shared_ptr<CheatFunction> SkyManager = std::make_shared<CheatFunction>(7, []() {
+	auto handle = TargetProcess.CreateScatterHandle();
+	int count = 0;
+	if(ConfigInstance.Misc.BrightNights)
+	{ 
+		Sky->WriteNightLightIntensity(handle, 25.0f);
+		Sky->WriteNightAmbientMultiplier(handle, 4.0f);
+		count++;
+		}
+	if (ConfigInstance.Misc.BrightCaves)
+	{
+		Sky->WriteDayAmbientMultiplier(handle, 2.0f);
+		count++;
+	}
+	if (count > 0)
+	{
+		TargetProcess.ExecuteReadScatter(handle);
+		TargetProcess.CloseScatterHandle(handle);
+	}
+
+	});
+
 void Caching()
 {
 	CachePlayers->Execute();
-	
+	UpdateLocalPlayer->Execute();
+	SkyManager->Execute();
 }
 void Intialize()
 {

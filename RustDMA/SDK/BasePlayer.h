@@ -112,4 +112,7 @@ public:
 	void UpdatePosition(VMMDLL_SCATTER_HANDLE handle);
 	void UpdateDestroyed(VMMDLL_SCATTER_HANDLE handle);
 	Vector3 GetPosition();
+	void UpdatePose(VMMDLL_SCATTER_HANDLE handle);
+	int GetPose();
+	void WritePose(int pose);
 };

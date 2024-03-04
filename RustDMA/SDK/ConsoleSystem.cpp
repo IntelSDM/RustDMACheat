@@ -34,13 +34,13 @@ ConsoleSystem::ConsoleSystem()
 	printf("[ConsoleSystem] Static Fields: 0x%llX\n", StaticField);
 	this->AllBackingField = TargetProcess.Read<uint64_t>(StaticField + AllBackingField);
 	printf("[ConsoleSystem] AllBackingField: 0x%llX\n", AllBackingField);
+	this->ListSize = TargetProcess.Read<uint32_t>(AllBackingField + ListSize);
 	/*
 	[DMA @ 22:23:07]: Didnt read all bytes requested! Only read 0/8 bytes!
 [DMA @ 22:23:07]: Didnt read all bytes requested! Only read 0/72 bytes!
 These are expcted :)
 	*/
-	printf("[ConsoleSystem] Don't Worry About Read Failures From This Point Of Size 0/8 Or 0/72\n");	
-	for (int i = 0; i < 650; i++)
+	for (int i = 0; i < ListSize; i++)
 	{
 		uint64_t command = TargetProcess.Read<uint64_t>(AllBackingField + (i*0x8));
 			if (command == 0x0)

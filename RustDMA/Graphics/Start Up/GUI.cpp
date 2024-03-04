@@ -18,6 +18,7 @@
 #include "ConfigInstance.h"
 #include "OcclusionCulling.h"
 #include "ConvarAdmin.h"
+#include "ConvarGraphics.h"
 int SelectedTab = 1;
 int SelectedSubTab = 0;
 int TabCount = 0;
@@ -78,7 +79,22 @@ void CreateGUI()
 				convaradmin->SetAdminTime(-1);
 		});
 	form->Push(changetime);
-
+	auto time = std::make_shared<Slider<int>>(10, 175, 150, LIT(L"Time"), LIT(L"°"), 0, 24, &ConfigInstance.Misc.Time);
+	form->Push(time);
+	auto changefov = std::make_shared<Toggle>(10, 200, LIT(L"Change FOV"), &ConfigInstance.Misc.ChangeFov);
+	changefov->SetValueChangedEvent([]()
+		{
+			std::shared_ptr<ConvarGraphics> graphics = std::make_shared<ConvarGraphics>();
+			if (ConfigInstance.Misc.ChangeFov)
+				graphics->WriteFOV(ConfigInstance.Misc.Fov);
+		});
+	form->Push(changefov);
+	auto fovamount = std::make_shared<Slider<int>>(10, 220, 150, LIT(L"FOV Amount"), LIT(L"°"), 0, 150, &ConfigInstance.Misc.Fov);
+	form->Push(fovamount);
+	auto brightnights = std::make_shared<Toggle>(10, 245, LIT(L"Bright Nights"), &ConfigInstance.Misc.BrightNights);
+	form->Push(brightnights);
+	auto brightcaves = std::make_shared<Toggle>(10, 265, LIT(L"Bright Caves"), &ConfigInstance.Misc.BrightCaves);
+	form->Push(brightcaves);
 	}
 
 	MenuEntity->Push(form);
