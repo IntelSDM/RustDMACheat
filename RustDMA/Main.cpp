@@ -15,6 +15,7 @@
 #include "Init.h"
 #include "GUI.h"
 #include "Configinstance.h"
+#include <dwmapi.h>
 std::shared_ptr<BasePlayer> BaseLocalPlayer = nullptr;
 std::shared_ptr<MainCamera> Camera = nullptr;
 std::shared_ptr<ConsoleSystem> Console = nullptr;
@@ -65,24 +66,6 @@ void SetupCvars()
 	std::shared_ptr<ConvarGraphics> graphics = std::make_shared<ConvarGraphics>();
 	if (ConfigInstance.Misc.ChangeFov)
 		graphics->WriteFOV(ConfigInstance.Misc.Fov);
-
-	/*std::shared_ptr < OcclusionCulling> occlusionculling = std::make_shared <OcclusionCulling>();
-	if (AdminEsp)
-	{
-		occlusionculling->WriteDebugSettings(DebugFilter::Dynamic);
-		occlusionculling->WriteLayerMask(131072);
-	}
-	std::shared_ptr <MainCamera> maincamera = std::make_shared < MainCamera>();
-	std::shared_ptr <ConvarGraphics> convargraphics = std::make_shared <ConvarGraphics>();
-	if(ChangeFov)
-	convargraphics->WriteFOV(Fov);
-	std::shared_ptr <ConvarAdmin> convaradmin = std::make_shared <ConvarAdmin>();
-	convaradmin->ClearVisionInWater(true);
-	if(ChangeTime)
-	convaradmin->SetAdminTime(Time);
-	std::shared_ptr <ConsoleSystem> consolesystem = std::make_shared <ConsoleSystem>();
-	if (AdminFlag)
-		BaseLocalPlayer->WritePlayerFlag(PlayerFlags::IsAdmin);*/
 }
 std::shared_ptr<CheatFunction> CachePlayers = std::make_shared<CheatFunction>(2000, []() {
 		BaseLocalPlayer->CachePlayers();
@@ -181,7 +164,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	freopen_s(&fDummy, LIT("CONOUT$"), LIT("w"), stderr);
 	freopen_s(&fDummy, LIT("CONOUT$"), LIT("w"), stdout);
 	printf(LIT("Debugging Window:\n"));
-
+	SetProcessDpiAwareness(PROCESS_PER_MONITOR_DPI_AWARE);
 	main();
 	ZeroMemory(&wc, sizeof(WNDCLASSEX));
 	wc.cbSize = sizeof(WNDCLASSEX);

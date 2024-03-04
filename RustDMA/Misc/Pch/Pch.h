@@ -25,7 +25,8 @@
 #include <cstdint>
 #include <d2d1_1.h>
 #include <dwrite.h>
-
+#include <dwmapi.h>
+#include <ShellScalingApi.h>
 #ifdef DrawText
 #undef DrawText
 #endif
@@ -71,6 +72,9 @@ using json = nlohmann::json;
 #pragma comment(lib, "d2d1.lib")
 #pragma comment(lib, "Dwrite")
 #pragma comment(lib, "windowscodecs.lib")
+#pragma comment(lib, "Dwmapi.lib")
+#pragma comment(lib, "Shcore.lib")
+
 #include "Vector.h"
 #include "Input.h"
 #include "Colour.h"
