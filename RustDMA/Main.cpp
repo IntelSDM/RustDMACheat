@@ -14,6 +14,7 @@
 #include "CheatFunction.h"
 #include "Init.h"
 #include "GUI.h"
+#include "Configinstance.h"
 std::shared_ptr<BasePlayer> BaseLocalPlayer = nullptr;
 std::shared_ptr<MainCamera> Camera = nullptr;
 bool SpiderMan = true;
@@ -40,6 +41,26 @@ void PerServerVariables()
 }
 void SetupCvars()
 {
+
+	std::shared_ptr<OcclusionCulling> occlusionculling = std::make_shared<OcclusionCulling>();
+	if (ConfigInstance.Misc.AdminESP)
+	{
+		occlusionculling->WriteDebugSettings(DebugFilter::Dynamic);
+		occlusionculling->WriteLayerMask(131072);
+	}
+	else
+	{
+		occlusionculling->WriteDebugSettings(DebugFilter::Off);
+		occlusionculling->WriteLayerMask(0);
+	}
+	std::shared_ptr<ConvarAdmin> convaradmin = std::make_shared<ConvarAdmin>();
+	if (ConfigInstance.Misc.RemoveWaterEffect)
+		convaradmin->ClearVisionInWater(true);
+	if (ConfigInstance.Misc.ChangeTime)
+		convaradmin->SetAdminTime(ConfigInstance.Misc.Time);
+	else
+		convaradmin->SetAdminTime(-1);
+
 	/*std::shared_ptr < OcclusionCulling> occlusionculling = std::make_shared <OcclusionCulling>();
 	if (AdminEsp)
 	{

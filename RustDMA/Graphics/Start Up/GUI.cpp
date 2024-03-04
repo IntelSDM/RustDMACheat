@@ -16,6 +16,8 @@
 #include "TabListBoxController.h"
 #include "TextBox.h"
 #include "ConfigInstance.h"
+#include "OcclusionCulling.h"
+#include "ConvarAdmin.h"
 int SelectedTab = 1;
 int SelectedSubTab = 0;
 int TabCount = 0;
@@ -40,9 +42,42 @@ void CreateGUI()
 	form->Push(playerdistance);
 	auto playermaxdistance = std::make_shared<Slider<int>>(10, 70,150, LIT(L"Max Distance"),LIT(L"m"), 0, 1000, &ConfigInstance.PlayerESP.MaxDistance);
 	form->Push(playermaxdistance);
-
-
-
+	auto adminesp = std::make_shared<Toggle>(10, 95, LIT(L"Admin Box ESP"), &ConfigInstance.Misc.AdminESP);
+	adminesp->SetValueChangedEvent([]()
+		{
+			std::shared_ptr<OcclusionCulling> occlusionculling = std::make_shared<OcclusionCulling>();
+			if (ConfigInstance.Misc.AdminESP)
+			{
+				occlusionculling->WriteDebugSettings(DebugFilter::Dynamic);
+				occlusionculling->WriteLayerMask(131072);
+			}
+			else
+			{
+				occlusionculling->WriteDebugSettings(DebugFilter::Off);
+				occlusionculling->WriteLayerMask(0);
+			}
+		});
+	form->Push(adminesp);
+	auto watereffect = std::make_shared<Toggle>(10,115, LIT(L"Remove Water Effect"), &ConfigInstance.Misc.RemoveWaterEffect);
+	watereffect->SetValueChangedEvent([]()
+		{
+			std::shared_ptr<ConvarAdmin> convaradmin = std::make_shared<ConvarAdmin>();
+			if (ConfigInstance.Misc.RemoveWaterEffect)
+				convaradmin->ClearVisionInWater(true);
+		});
+	form->Push(watereffect);
+	auto adminflag = std::make_shared<Toggle>(10, 135, LIT(L"Admin Flag"), &ConfigInstance.Misc.AdminFlag);
+	form->Push(adminflag);
+	auto changetime = std::make_shared<Toggle>(10, 155, LIT(L"Change Time"), &ConfigInstance.Misc.ChangeTime);
+	changetime->SetValueChangedEvent([]()
+		{
+			std::shared_ptr<ConvarAdmin> convaradmin = std::make_shared<ConvarAdmin>();
+			if (ConfigInstance.Misc.ChangeTime)
+				convaradmin->SetAdminTime(ConfigInstance.Misc.Time);
+			else
+				convaradmin->SetAdminTime(-1);
+		});
+	form->Push(changetime);
 
 	}
 

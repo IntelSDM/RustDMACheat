@@ -11,6 +11,10 @@ public:
     }
 
     bool AdminESP = true;
+    bool ChangeTime = false;
+    int Time = 12;
+    bool RemoveWaterEffect = false;
+    bool AdminFlag = false;
     void ToJsonColour(json* j, const std::string& name, D2D1::ColorF* colour)
     {
         (*j)[ConfigName][name][LIT("r")] = colour->r;
@@ -34,6 +38,10 @@ public:
     {
         json j;
         j[ConfigName][LIT("AdminESP")] = AdminESP;
+        j[ConfigName][LIT("ChangeTime")] = ChangeTime;
+        j[ConfigName][LIT("Time")] = Time;
+        j[ConfigName][LIT("RemoveWaterEffect")] = RemoveWaterEffect;
+        j[ConfigName][LIT("AdminFlag")] = AdminFlag;
      
 
         return j;
@@ -44,6 +52,14 @@ public:
             return;
         if (j[ConfigName].contains(LIT("AdminESP")))
             AdminESP = j[ConfigName][LIT("AdminESP")];
+        if (j[ConfigName].contains(LIT("ChangeTime")))
+            ChangeTime = j[ConfigName][LIT("ChangeTime")];
+        if (j[ConfigName].contains(LIT("Time")))
+            Time = j[ConfigName][LIT("Time")];
+        if (j[ConfigName].contains(LIT("RemoveWaterEffect")))
+            RemoveWaterEffect = j[ConfigName][LIT("RemoveWaterEffect")];
+        if (j[ConfigName].contains(LIT("AdminFlag")))
+            AdminFlag = j[ConfigName][LIT("AdminFlag")];
     }
 };
 
