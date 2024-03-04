@@ -170,6 +170,7 @@ void main()
 		return;
 	}
 	TargetProcess.GetBaseAddress("GameAssembly.dll");
+	TargetProcess.FixCr3();
 	Intialize();
 }
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
