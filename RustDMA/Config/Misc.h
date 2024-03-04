@@ -19,6 +19,10 @@ public:
     int Fov = 100;
     bool BrightNights = false;
     bool BrightCaves = false;
+    bool NoRecoil = true;
+    int RecoilX = 25;
+    int RecoilY = 25;
+    bool SpiderMan = true;
     void ToJsonColour(json* j, const std::string& name, D2D1::ColorF* colour)
     {
         (*j)[ConfigName][name][LIT("r")] = colour->r;
@@ -50,6 +54,10 @@ public:
         j[ConfigName][LIT("Fov")] = Fov;
         j[ConfigName][LIT("BrightNights")] = BrightNights;
         j[ConfigName][LIT("BrightCaves")] = BrightCaves;
+        j[ConfigName][LIT("NoRecoil")] = NoRecoil;
+        j[ConfigName][LIT("RecoilX")] = RecoilX;
+        j[ConfigName][LIT("RecoilY")] = RecoilY;
+        j[ConfigName][LIT("SpiderMan")] = SpiderMan;
      
 
         return j;
@@ -76,6 +84,15 @@ public:
                 BrightNights = j[ConfigName][LIT("BrightNights")];
         if (j[ConfigName].contains(LIT("BrightCaves")))
             BrightCaves = j[ConfigName][LIT("BrightCaves")];
+        if (j[ConfigName].contains(LIT("NoRecoil")))
+                NoRecoil = j[ConfigName][LIT("NoRecoil")];
+        if (j[ConfigName].contains(LIT("RecoilX")))
+            RecoilX = j[ConfigName][LIT("RecoilX")];
+        if (j[ConfigName].contains(LIT("RecoilY")))
+            RecoilY = j[ConfigName][LIT("RecoilY")];
+        if (j[ConfigName].contains(LIT("SpiderMan")))
+            SpiderMan = j[ConfigName][LIT("SpiderMan")];
+
     }
 };
 

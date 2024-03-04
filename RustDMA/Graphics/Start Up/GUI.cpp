@@ -31,7 +31,7 @@ D2D1::ColorF ColourPick = Colour(0, 150, 255, 255);
 void CreateGUI()
 {
 	MenuEntity = std::make_shared<Container>();
-	auto form = std::make_shared<Form>(100, 100.0f, 400, 300, 2, 30, LIT(L"Cool Hack"), false);
+	auto form = std::make_shared<Form>(100, 100.0f, 420, 350, 2, 30, LIT(L"Cool Hack"), false);
 	{
 	auto enableplayeresp = std::make_shared<Toggle>(10, 10, LIT(L"Enable Player ESP"), &ConfigInstance.PlayerESP.Enable);
 	form->Push(enableplayeresp);
@@ -95,6 +95,14 @@ void CreateGUI()
 	form->Push(brightnights);
 	auto brightcaves = std::make_shared<Toggle>(10, 265, LIT(L"Bright Caves"), &ConfigInstance.Misc.BrightCaves);
 	form->Push(brightcaves);
+	auto norecoil = std::make_shared<Toggle>(180, 10, LIT(L"No Recoil"), &ConfigInstance.Misc.NoRecoil);
+	form->Push(norecoil);
+	auto recoilx = std::make_shared<Slider<int>>(180, 30, 150, LIT(L"Recoil X"), LIT(L"%"), 0, 100, &ConfigInstance.Misc.RecoilX);
+	form->Push(recoilx);
+	auto recoily = std::make_shared<Slider<int>>(180, 55, 150, LIT(L"Recoil Y"), LIT(L"%"), 0, 100, &ConfigInstance.Misc.RecoilY);
+	form->Push(recoily);
+	auto spiderman = std::make_shared<Toggle>(180,85,LIT(L"Spiderman"),&ConfigInstance.Misc.SpiderMan);
+	form->Push(spiderman);
 	}
 
 	MenuEntity->Push(form);

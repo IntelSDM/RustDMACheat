@@ -15,10 +15,11 @@ BasePlayer::BasePlayer(uint64_t address,VMMDLL_SCATTER_HANDLE handle)
 	TargetProcess.AddScatterReadRequest(handle, Class + DisplayName, reinterpret_cast<void*>(&DisplayName), sizeof(uint64_t));
 	TargetProcess.AddScatterReadRequest(handle, Class + ModelState, reinterpret_cast<void*>(&ModelState), sizeof(uint64_t));
 	TargetProcess.AddScatterReadRequest(handle, Class + DestroyedOffset, reinterpret_cast<void*>(&Destroyed), sizeof(bool));
+	TargetProcess.AddScatterReadRequest(handle, Class + PlayerFlag, reinterpret_cast<void*>(&ActiveFlag), sizeof(bool));
 
 
 	this->BaseMovementInstance = std::make_shared<BaseMovement>(BaseMovementOffset);
-	ContainerBelt = TargetProcess.Read<uint64_t>(PlayerInventory + ContainerBelt);
+
 }
 void BasePlayer::InitializePlayerList()
 {
@@ -36,8 +37,8 @@ void BasePlayer::CacheStage1(VMMDLL_SCATTER_HANDLE handle)
 {
 	TargetProcess.AddScatterReadRequest(handle, PlayerModel + Position, reinterpret_cast<void*>(&TransformPosition), sizeof(Vector3));
 	TargetProcess.AddScatterReadRequest(handle, DisplayName + 0x14, reinterpret_cast<void*>(&PlayerName), sizeof(PlayerName));
-	TargetProcess.AddScatterReadRequest(handle, ModelState + PoseType, reinterpret_cast<void*>(&Pose), sizeof(int));
 	TargetProcess.AddScatterReadRequest(handle, PlayerModel + IsNPCOffset, reinterpret_cast<void*>(&NPC), sizeof(bool));
+	TargetProcess.AddScatterReadRequest(handle, PlayerInventory + ContainerBelt, reinterpret_cast<void*>(&ContainerBelt),sizeof(uint64_t));
 }
 void BasePlayer::CachePlayers()
 {
@@ -115,7 +116,7 @@ uint32_t BasePlayer::GetActiveItemID()
 // call this in the local player loop to keep the value updated as it changes depending on the item
 void BasePlayer::UpdateActiveItemID(VMMDLL_SCATTER_HANDLE handle)
 {
-	TargetProcess.AddScatterReadRequest(handle, Class + ActiveItemIDOffset, reinterpret_cast<void*>(&ActiveItemID), sizeof(uint64_t));
+	TargetProcess.AddScatterReadRequest(handle,Class + ActiveItemIDOffset, reinterpret_cast<void*>(&ActiveItemID), sizeof(uint64_t));
 }
 std::shared_ptr<BaseMovement> BasePlayer::GetBaseMovement()
 {
@@ -126,7 +127,6 @@ void BasePlayer::SetupBeltContainerList()
 	if (!IsPlayerValid())
 		return;
 	BeltContainerList.clear();
-
 	uint64_t itemlist = TargetProcess.Read<uint64_t>(ContainerBelt + ItemList); // yeah you need to reread this constantly, if you don't hell breaks loose. 
 	auto handle = TargetProcess.CreateScatterHandle();
 	uint64_t items = 0;
@@ -135,7 +135,7 @@ void BasePlayer::SetupBeltContainerList()
 	TargetProcess.AddScatterReadRequest(handle, itemlist + ItemListSize, reinterpret_cast<void*>(&itemsize), sizeof(uint32_t));
 	TargetProcess.ExecuteScatterRead(handle);
 	TargetProcess.CloseScatterHandle(handle);
-	BeltContainerList.resize(itemsize);
+	BeltContainerList.resize(itemsize);	
 
 	std::vector<uint64_t> objectpointrs;
 	objectpointrs.resize(itemsize);
@@ -169,7 +169,7 @@ std::shared_ptr<Item> BasePlayer::GetActiveItem()
 			continue; // no wasting reads and writes on null pointers
 
 		int activeweaponid = item->GetItemID();
-	
+
 		if (ActiveItemID == activeweaponid)
 		{
 
@@ -191,7 +191,7 @@ bool BasePlayer::IsSleeping()
 {
 	if (!IsPlayerValid())
 		return false;
-	return Pose == 8;
+	return (ActiveFlag & (int)16) == (int)16;
 }
 bool BasePlayer::IsNPC()
 {
@@ -227,18 +227,18 @@ Vector3 BasePlayer::GetPosition()
 {
 	return TransformPosition;
 }
-void BasePlayer::UpdatePose(VMMDLL_SCATTER_HANDLE handle)
+void BasePlayer::UpdateActiveFlag(VMMDLL_SCATTER_HANDLE handle)
 {
-	TargetProcess.AddScatterReadRequest(handle, ModelState + PoseType, reinterpret_cast<void*>(&Pose), sizeof(int));
+	TargetProcess.AddScatterReadRequest(handle, Class + PlayerFlag, reinterpret_cast<void*>(&ActiveFlag), sizeof(int));
 }
-void BasePlayer::WritePose(int pose)
+void BasePlayer::WriteActiveFlag(int flag)
 {
 	if (!IsPlayerValid())
 		return;
-	if (!TargetProcess.Write<int>(ModelState + PoseType, pose))
-		printf("[BasePlayer] Failed to write Pose\n");
+	if (!TargetProcess.Write<int>(Class + PlayerFlag, flag))
+		printf("[BasePlayer] Failed to write flag\n");
 }
-int BasePlayer::GetPose()
+int BasePlayer::GetActiveFlag()
 {
-	return Pose;
+	return ActiveFlag;
 }

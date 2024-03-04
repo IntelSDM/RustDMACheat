@@ -40,6 +40,10 @@ void PerServerVariables()
 	TargetProcess.ExecuteReadScatter(handle);
 	TargetProcess.CloseScatterHandle(handle);
 	BaseLocalPlayer->InitializePlayerList();
+	handle = TargetProcess.CreateScatterHandle();
+	BaseLocalPlayer->CacheStage1(handle);
+	TargetProcess.ExecuteReadScatter(handle);
+	TargetProcess.CloseScatterHandle(handle);
 	Camera = std::make_shared <MainCamera>();
 }
 void SetupCvars()
@@ -72,21 +76,47 @@ std::shared_ptr<CheatFunction> CachePlayers = std::make_shared<CheatFunction>(20
 	});
 
 std::shared_ptr<CheatFunction> UpdateLocalPlayer = std::make_shared<CheatFunction>(300, []() {
+
+	if (ConfigInstance.Misc.NoRecoil)
+	{
+		BaseLocalPlayer->SetupBeltContainerList();
+	}
+
+	auto handle = TargetProcess.CreateScatterHandle();
+	BaseLocalPlayer->UpdateActiveItemID(handle);
+	BaseLocalPlayer->UpdateActiveFlag(handle);
+	TargetProcess.ExecuteReadScatter(handle);
+	TargetProcess.CloseScatterHandle(handle);
+
+	if (ConfigInstance.Misc.NoRecoil)
+	{
+		std::shared_ptr <Item> helditem = BaseLocalPlayer->GetActiveItem();
+		if (helditem != nullptr)
+		{
+			std::shared_ptr <BaseProjectile> weapon = helditem->GetBaseProjectile();
+			if (weapon->IsValidWeapon())
+			{
+				handle = TargetProcess.CreateScatterHandle();
+				weapon->WriteRecoilPitch(handle,helditem->GetItemID(),ConfigInstance.Misc.RecoilX);
+				weapon->WriteRecoilYaw(handle,helditem->GetItemID(), ConfigInstance.Misc.RecoilY);
+				TargetProcess.ExecuteScatterWrite(handle);
+				TargetProcess.CloseScatterHandle(handle);
+			}
+
+		}
+
+	}
+	
 	if (ConfigInstance.Misc.AdminFlag)
 	{
-		auto handle = TargetProcess.CreateScatterHandle();
-		BaseLocalPlayer->UpdatePose(handle);
-		TargetProcess.ExecuteReadScatter(handle);
-		TargetProcess.CloseScatterHandle(handle);
-
-		if ((BaseLocalPlayer->GetPose() & (int)4) != (int)4)
+		if ((BaseLocalPlayer->GetActiveFlag() & (int)4) != (int)4)
 		{
 			if (Console == nullptr)
 			{
 				Console = std::make_shared<ConsoleSystem>();
 
 			}
-			BaseLocalPlayer->WritePose(BaseLocalPlayer->GetPose() + 4);
+			BaseLocalPlayer->WriteActiveFlag(BaseLocalPlayer->GetActiveFlag() + 4);
 		}
 	}
 	});
@@ -114,6 +144,8 @@ std::shared_ptr<CheatFunction> SkyManager = std::make_shared<CheatFunction>(7, [
 
 void Caching()
 {
+	if (BaseLocalPlayer->GetPlayerListSize() == 0)
+		return;
 	CachePlayers->Execute();
 	UpdateLocalPlayer->Execute();
 	SkyManager->Execute();

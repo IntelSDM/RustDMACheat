@@ -14,6 +14,6 @@ class BaseProjectile
 public:
 	BaseProjectile(uint64_t address);
 	bool IsValidWeapon();
-	void WriteRecoilYaw(uint32_t itemid, int percent);
-	void WriteRecoilPitch(uint32_t itemid, int percent);
+	void WriteRecoilYaw(VMMDLL_SCATTER_HANDLE handle, uint32_t itemid, int percent);
+	void WriteRecoilPitch(VMMDLL_SCATTER_HANDLE handle, uint32_t itemid, int percent);
 };

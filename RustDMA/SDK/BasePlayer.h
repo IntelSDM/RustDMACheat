@@ -68,7 +68,6 @@ class BasePlayer
 	uint64_t ModelState = 0x810; // public ModelState modelState;
 	uint64_t DestroyedOffset = 0x38; // basentworkable ->private bool <IsDestroyed>k__BackingField;
 	uint32_t IsNPCOffset = 0x2C8; // 	private bool <IsNpc>k__BackingField;
-	uint64_t PoseType = 0x20; // ModelState -> public int flags;
 	std::shared_ptr<BaseMovement> BaseMovementInstance;
 
 
@@ -86,7 +85,7 @@ class BasePlayer
 
 	bool Destroyed = false;
 	bool NPC = false;
-	int Pose = 0;
+	int ActiveFlag = 0;
 
 public:
 	BasePlayer(uint64_t address, VMMDLL_SCATTER_HANDLE handle);
@@ -112,7 +111,7 @@ public:
 	void UpdatePosition(VMMDLL_SCATTER_HANDLE handle);
 	void UpdateDestroyed(VMMDLL_SCATTER_HANDLE handle);
 	Vector3 GetPosition();
-	void UpdatePose(VMMDLL_SCATTER_HANDLE handle);
-	int GetPose();
-	void WritePose(int pose);
+	void UpdateActiveFlag(VMMDLL_SCATTER_HANDLE handle);
+	int GetActiveFlag();
+	void WriteActiveFlag(int pose);
 };
