@@ -3,10 +3,16 @@ A little DMA cheat for Rust. Some basic functions. A basic and easy to update SD
 
 
 ## Showcase
-<a href="https://youtu.be/oOj10Wa3q3s">
-  <img src="https://github.com/IntelSDM/RustDmaCheat/assets/86087830/c7b43c52-b0e8-4a02-a835-46440c84d55e" alt="Play Video" width="700" height="400">
+<p align="Left">
+  <img src="https://github.com/IntelSDM/RustDMACheat/assets/86087830/d9c77edc-f81d-4bd3-892b-0b62cb7439c4"
+    style="width: 50%;" />
+</p>
+<a href="https://youtu.be/6o1l7W-cG1Y">
+  <img src="https://github.com/IntelSDM/RustDMACheat/assets/86087830/2c35fc1d-cfce-43e8-b5e6-46370068f339" alt="Play Video" width="950" height="650">
 </a>
-
+<a href="https://youtu.be/oOj10Wa3q3s">
+  <img src="https://github.com/IntelSDM/RustDmaCheat/assets/86087830/c7b43c52-b0e8-4a02-a835-46440c84d55e" alt="Play Video" width="950" height="650">
+</a>
 <p align="Left">
   <img src="https://github.com/IntelSDM/RustDmaCheat/assets/86087830/3b74916e-5aeb-426a-b6f2-877bdc0c7792"
     style="width: 95%;" />
@@ -16,11 +22,13 @@ A little DMA cheat for Rust. Some basic functions. A basic and easy to update SD
     style="width: 95%;" />
 </p>
 
+
 ## Instructions
 * [Installation Guide](./Instructions.md)
 * [Updating Guide](./Updating.md)
 
 ## Features
+* Player Fuser ESP
 * Admin ESP
 * No Recoil / Recoil Modifier
 * SpiderMan
