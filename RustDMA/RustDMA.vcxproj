@@ -137,12 +137,12 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)$(ProjectName)\SDK;$(SolutionDir)$(ProjectName)\Misc\Pch;$(SolutionDir)$(ProjectName)\Memory;$(SolutionDir)$(ProjectName)\;$(SolutionDir)$(ProjectName)\Misc</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)$(ProjectName)\Security;$(SolutionDir)$(ProjectName)\Graphics;$(SolutionDir)$(ProjectName)\Graphics\utility;$(SolutionDir)$(ProjectName)\Graphics\entities;$(SolutionDir)$(ProjectName)\Esp;$(SolutionDir)$(ProjectName)\Graphics\start up;$(SolutionDir)$(ProjectName)\Config;$(SolutionDir)$(ProjectName)\SDK;$(SolutionDir)$(ProjectName)\Misc\Pch;$(SolutionDir)$(ProjectName)\Memory;$(SolutionDir)$(ProjectName)\;$(SolutionDir)$(ProjectName)\Misc</AdditionalIncludeDirectories>
       <PrecompiledHeader>Create</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
@@ -155,22 +155,46 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)$(ProjectName)\SDK;$(SolutionDir)$(ProjectName)\Misc\Pch;$(SolutionDir)$(ProjectName)\Memory;$(SolutionDir)$(ProjectName)\;$(SolutionDir)$(ProjectName)\Misc</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)$(ProjectName)\Security;$(SolutionDir)$(ProjectName)\Graphics;$(SolutionDir)$(ProjectName)\Graphics\utility;$(SolutionDir)$(ProjectName)\Graphics\entities;$(SolutionDir)$(ProjectName)\Esp;$(SolutionDir)$(ProjectName)\Graphics\start up;$(SolutionDir)$(ProjectName)\Config;$(SolutionDir)$(ProjectName)\SDK;$(SolutionDir)$(ProjectName)\Misc\Pch;$(SolutionDir)$(ProjectName)\Memory;$(SolutionDir)$(ProjectName)\;$(SolutionDir)$(ProjectName)\Misc</AdditionalIncludeDirectories>
       <PrecompiledHeader>Create</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Esp\PlayerEsp.cpp" />
+    <ClCompile Include="Esp\Visuals.cpp" />
+    <ClCompile Include="Graphics\Drawing.cpp" />
+    <ClCompile Include="Graphics\Entities\Button.cpp" />
+    <ClCompile Include="Graphics\Entities\ColourPicker.cpp" />
+    <ClCompile Include="Graphics\Entities\ComboBox.cpp" />
+    <ClCompile Include="Graphics\Entities\DropDown.cpp" />
+    <ClCompile Include="Graphics\Entities\Entity.cpp" />
+    <ClCompile Include="Graphics\Entities\Form.cpp" />
+    <ClCompile Include="Graphics\Entities\KeyBind.cpp" />
+    <ClCompile Include="Graphics\Entities\Label.cpp" />
+    <ClCompile Include="Graphics\Entities\Tab.cpp" />
+    <ClCompile Include="Graphics\Entities\TabController.cpp" />
+    <ClCompile Include="Graphics\Entities\TabListBox.cpp" />
+    <ClCompile Include="Graphics\Entities\TabListBoxController.cpp" />
+    <ClCompile Include="Graphics\Entities\TextBox.cpp" />
+    <ClCompile Include="Graphics\Entities\Toggle.cpp" />
+    <ClCompile Include="Graphics\Start Up\GUI.cpp" />
+    <ClCompile Include="Graphics\Start Up\Init.cpp" />
+    <ClCompile Include="Graphics\Utility\Animation.cpp" />
+    <ClCompile Include="Graphics\Utility\Colour.cpp" />
+    <ClCompile Include="Graphics\Utility\Font.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Memory\DMAHandler.cpp" />
+    <ClCompile Include="Memory\Memory.cpp" />
     <ClCompile Include="Misc\CheatFunction.cpp" />
+    <ClCompile Include="Misc\Input.cpp" />
     <ClCompile Include="Misc\Pch\Pch.cpp" />
+    <ClCompile Include="Misc\Vector.cpp" />
     <ClCompile Include="SDK\BaseMovement.cpp" />
     <ClCompile Include="SDK\BaseNetworkable.cpp" />
     <ClCompile Include="SDK\BasePlayer.cpp" />
@@ -185,10 +209,40 @@
     <ClCompile Include="SDK\TODSky.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Config\ConfigInstance.h" />
+    <ClInclude Include="Config\Misc.h" />
+    <ClInclude Include="Config\PlayerEspConfig.h" />
+    <ClInclude Include="Esp\PlayerEsp.h" />
+    <ClInclude Include="Esp\Visuals.h" />
+    <ClInclude Include="Graphics\Drawing.h" />
+    <ClInclude Include="Graphics\Entities\Button.h" />
+    <ClInclude Include="Graphics\Entities\ColourPicker.h" />
+    <ClInclude Include="Graphics\Entities\ComboBox.h" />
+    <ClInclude Include="Graphics\Entities\DropDown.h" />
+    <ClInclude Include="Graphics\Entities\Entity.h" />
+    <ClInclude Include="Graphics\Entities\Form.h" />
+    <ClInclude Include="Graphics\Entities\KeyBind.h" />
+    <ClInclude Include="Graphics\Entities\Label.h" />
+    <ClInclude Include="Graphics\Entities\Slider.h" />
+    <ClInclude Include="Graphics\Entities\Tab.h" />
+    <ClInclude Include="Graphics\Entities\TabController.h" />
+    <ClInclude Include="Graphics\Entities\TabListBox.h" />
+    <ClInclude Include="Graphics\Entities\TabListBoxController.h" />
+    <ClInclude Include="Graphics\Entities\TextBox.h" />
+    <ClInclude Include="Graphics\Entities\Toggle.h" />
+    <ClInclude Include="Graphics\Graphics.h" />
+    <ClInclude Include="Graphics\Start Up\GUI.h" />
+    <ClInclude Include="Graphics\Start Up\Init.h" />
+    <ClInclude Include="Graphics\Utility\Animation.h" />
+    <ClInclude Include="Graphics\Utility\Colour.h" />
+    <ClInclude Include="Graphics\Utility\Font.h" />
     <ClInclude Include="Memory\DMAHandler.h" />
+    <ClInclude Include="Memory\Memory.h" />
     <ClInclude Include="Misc\CheatFunction.h" />
+    <ClInclude Include="Misc\Input.h" />
     <ClInclude Include="Misc\Pch\Pch.h" />
     <ClInclude Include="Globals.h" />
+    <ClInclude Include="Misc\Vector.h" />
     <ClInclude Include="SDK\BaseMovement.h" />
     <ClInclude Include="SDK\BaseNetworkable.h" />
     <ClInclude Include="SDK\BasePlayer.h" />
@@ -201,6 +255,7 @@
     <ClInclude Include="SDK\MainCamera.h" />
     <ClInclude Include="SDK\OcclusionCulling.h" />
     <ClInclude Include="SDK\TODSky.h" />
+    <ClInclude Include="Security\XorStr.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

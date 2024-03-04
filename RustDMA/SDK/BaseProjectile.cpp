@@ -31,7 +31,7 @@ bool BaseProjectile::IsValidWeapon()
 	return RecoilProperties != 0;
 }
 
-void BaseProjectile::WriteRecoilYaw(uint32_t itemid, int percent)
+void BaseProjectile::WriteRecoilYaw(VMMDLL_SCATTER_HANDLE handle, uint32_t itemid, int percent)
 {
 	if (OriginalRecoilYawMin.find(itemid) == OriginalRecoilYawMin.end() && !RejectedItems.contains(itemid)) // save on reads 
 	{
@@ -54,13 +54,11 @@ void BaseProjectile::WriteRecoilYaw(uint32_t itemid, int percent)
 	float yawmax = OriginalRecoilYawMax[itemid];
 	float yawminpercent = yawmin * (percent / 100.0f);
 	float yawmaxpercent = yawmax * (percent / 100.0f);
-	if (!TargetProcess.Write<float>(RecoilOverride + RecoilYawMin, yawminpercent))
-		printf("[BaseProjectile] Failed to write RecoilYawMin\n");
-	if (!TargetProcess.Write<float>(RecoilOverride + RecoilYawMax, yawmaxpercent))
-		printf("[BaseProjectile] Failed to write RecoilYawMax\n");
+	TargetProcess.AddScatterWriteRequest<float>(handle, RecoilOverride + RecoilYawMin, yawminpercent);
+	TargetProcess.AddScatterWriteRequest<float>(handle,RecoilOverride + RecoilYawMax, yawmaxpercent);
 }
 
-void BaseProjectile::WriteRecoilPitch(uint32_t itemid, int percent)
+void BaseProjectile::WriteRecoilPitch(VMMDLL_SCATTER_HANDLE handle, uint32_t itemid, int percent)
 {
 	if (OriginalRecoilPitchMin.find(itemid) == OriginalRecoilPitchMin.end() && !RejectedItems.contains(itemid))
 	{
@@ -83,8 +81,6 @@ void BaseProjectile::WriteRecoilPitch(uint32_t itemid, int percent)
 	float pitchmax = OriginalRecoilPitchMax[itemid];
 	float pitchminpercent = pitchmin * (percent / 100.0f);
 	float pitchmaxpercent = pitchmax * (percent / 100.0f);		
-	if (!TargetProcess.Write<float>(RecoilOverride + RecoilPitchMin, pitchminpercent))
-		printf("[BaseProjectile] Failed to write RecoilPitchMin\n");
-	if (!TargetProcess.Write<float>(RecoilOverride + RecoilPitchMax, pitchmaxpercent))
-		printf("[BaseProjectile] Failed to write RecoilPitchMax\n");
+	TargetProcess.AddScatterWriteRequest<float>(handle, RecoilOverride + RecoilPitchMin, pitchminpercent);
+	TargetProcess.AddScatterWriteRequest<float>(handle, RecoilOverride + RecoilPitchMax, pitchmaxpercent);
 }

@@ -8,9 +8,9 @@ Item::Item(uint64_t address)
 	Class = address;
 //	printf("[Item] Initialized: 0x%llX\n", Class);
 //	auto handle = TargetProcess.CreateScatterHandle();
-//	TargetProcess.QueueScatterReadEx(handle, Class + Info,reinterpret_cast<void*>(&Info),sizeof(uint64_t));
-//	TargetProcess.QueueScatterReadEx(handle, Class + ItemID, reinterpret_cast<void*>(&ItemID), sizeof(uint32_t));
-//	TargetProcess.QueueScatterReadEx(handle, Class + HeldEntity, reinterpret_cast<void*>(&HeldEntity), sizeof(uint64_t));
+//	TargetProcess.AddScatterReadRequest(handle, Class + Info,reinterpret_cast<void*>(&Info),sizeof(uint64_t));
+//	TargetProcess.AddScatterReadRequest(handle, Class + ItemID, reinterpret_cast<void*>(&ItemID), sizeof(uint32_t));
+//	TargetProcess.AddScatterReadRequest(handle, Class + HeldEntity, reinterpret_cast<void*>(&HeldEntity), sizeof(uint64_t));
 //	TargetProcess.ExecuteScatterRead(handle);
 // 
 	//TargetProcess.CloseScatterHandle(handle);

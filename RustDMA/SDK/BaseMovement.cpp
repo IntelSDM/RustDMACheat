@@ -44,42 +44,36 @@ float BaseMovement::GetLandTime()
 
 void BaseMovement::WriteGroundAngle(VMMDLL_SCATTER_HANDLE handle, float angle)
 {
-	if(!TargetProcess.QueueScatterWriteEx<float>(handle, Class + GroundAngle, angle))
-		printf("[BaseMovement] Failed to write GroundAngle\n");
+	TargetProcess.AddScatterWriteRequest<float>(handle, Class + GroundAngle, angle);
 }
 
 void BaseMovement::WriteGroundAngleNew(VMMDLL_SCATTER_HANDLE handle, float angle)
 {
-	if(!TargetProcess.QueueScatterWriteEx<float>(handle, Class + GroundAngleNew, angle))
-		printf("[BaseMovement] Failed to write GroundAngleNew\n");
+	TargetProcess.AddScatterWriteRequest<float>(handle, Class + GroundAngleNew, angle);
 }
 
 void BaseMovement::WriteMaxAngleClimbing(VMMDLL_SCATTER_HANDLE handle, float angle)
 {
-	if(!TargetProcess.QueueScatterWriteEx<float>(handle, Class + MaxAngleClimbing, angle))
-		printf("[BaseMovement] Failed to write MaxAngleClimbing\n");
+	TargetProcess.AddScatterWriteRequest<float>(handle, Class + MaxAngleClimbing, angle);
 }
 
 void BaseMovement::WriteMaxAngleWalking(VMMDLL_SCATTER_HANDLE handle, float angle)
 {
-	if(!TargetProcess.QueueScatterWriteEx<float>(handle, Class + MaxAngleWalking, angle))
-		printf("[BaseMovement] Failed to write MaxAngleWalking\n");
+	TargetProcess.AddScatterWriteRequest<float>(handle, Class + MaxAngleWalking, angle);
+	
 }
 
 void BaseMovement::WriteGroundTime(VMMDLL_SCATTER_HANDLE handle, float time)
 {
-	if(!TargetProcess.QueueScatterWriteEx<float>(handle, Class + GroundTime, time))
-		printf("[BaseMovement] Failed to write GroundTime\n");
+	TargetProcess.AddScatterWriteRequest<float>(handle, Class + GroundTime, time);
 }
 
 void BaseMovement::WriteJumpTime(VMMDLL_SCATTER_HANDLE handle, float time)
 {
-	if(!TargetProcess.QueueScatterWriteEx<float>(handle, Class + JumpTime, time))
-		printf("[BaseMovement] Failed to write JumpTime\n");
+	TargetProcess.AddScatterWriteRequest<float>(handle, Class + JumpTime, time);
 }
 
 void BaseMovement::WriteLandTime(VMMDLL_SCATTER_HANDLE handle, float time)
 {
-	if(!TargetProcess.QueueScatterWriteEx<float>(handle, Class + LandTime, time))
-		printf("[BaseMovement] Failed to write LandTime\n");
+	TargetProcess.AddScatterWriteRequest<float>(handle, Class + LandTime, time);
 }

@@ -5,7 +5,7 @@
 ConvarAdmin::ConvarAdmin()
 {
 	printf("[ConvarAdmin] Initialized\n");
-	uint64_t graphics = TargetProcess.Read<uint64_t>(TargetProcess.GetModuleAddress(L"GameAssembly.dll") + Class); // Get Class Start Address
+	uint64_t graphics = TargetProcess.Read<uint64_t>(TargetProcess.GetBaseAddress(LIT("GameAssembly.dll")) + Class); // Get Class Start Address
 	printf("[ConvarAdmin] ConvarAdmin: 0x%llX\n", graphics);
 	this->StaticField = TargetProcess.Read<uint64_t>(graphics + StaticField); // Set Static Padding
 	printf("[ConvarAdmin] Static Fields: 0x%llX\n", StaticField);

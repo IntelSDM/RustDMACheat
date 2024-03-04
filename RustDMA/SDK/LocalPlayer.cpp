@@ -5,7 +5,7 @@
 LocalPlayer::LocalPlayer()
 {
 	printf("[LocalPlayer] Initialized\n");
-	Class = TargetProcess.Read<uint64_t>(TargetProcess.GetModuleAddress(L"GameAssembly.dll") + Class); // Get Class Start Address
+	Class = TargetProcess.Read<uint64_t>(TargetProcess.GetBaseAddress(LIT("GameAssembly.dll")) + Class); // Get Class Start Address
 	printf("[LocalPlayer] LocalPlayer: 0x%llX\n", Class);
 	this->StaticField = TargetProcess.Read<uint64_t>(Class + StaticField); // Set Static Padding
 	printf("[LocalPlayer] Static Fields: 0x%llX\n", StaticField);
@@ -21,7 +21,7 @@ uint64_t LocalPlayer::GetBasePlayer()
 
 void LocalPlayer::UpdateBasePlayer(VMMDLL_SCATTER_HANDLE handle)
 {
-	TargetProcess.QueueScatterReadEx(handle, StaticField + BasePlayerBackingField,reinterpret_cast<void*>(&BasePlayerValue),sizeof(uint64_t));
+	TargetProcess.AddScatterReadRequest(handle, StaticField + BasePlayerBackingField,reinterpret_cast<void*>(&BasePlayerValue),sizeof(uint64_t));
 }
 
 bool LocalPlayer::IsLocalPlayerValid()

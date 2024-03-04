@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Globals.h"
-#include "DMAHandler.h"
+#include "memory.h"
 #include "OcclusionCulling.h"
 #include "MainCamera.h"
 #include "ConvarGraphics.h"
@@ -12,46 +12,142 @@
 #include "TODSky.h"
 #include "BaseProjectile.h"
 #include "CheatFunction.h"
-DMAHandler TargetProcess = DMAHandler(L"RustClient.exe");
+#include "Init.h"
+#include "GUI.h"
+#include "Configinstance.h"
+#include <dwmapi.h>
 std::shared_ptr<BasePlayer> BaseLocalPlayer = nullptr;
-void MainThread();
-bool SpiderMan = true;
-bool NoRecoil = true;
-int RecoilReduction = 25;
-bool AdminFlag = true;
-bool ChangeFov = false;
-int Fov = 100;
-bool ChangeTime = false;
-int Time = 12;
-bool BrightNight = false;
-bool BrightCaves = false;
-bool AdminEsp = true;
+std::shared_ptr<MainCamera> Camera = nullptr;
+std::shared_ptr<ConsoleSystem> Console = nullptr;
+std::shared_ptr<TODSky> Sky = nullptr;
 // each time we reinitialize localplayer
 void PerServerVariables()
 {
 	std::shared_ptr <LocalPlayer> localplayer = std::make_shared <LocalPlayer>();
-	std::shared_ptr <BasePlayer> baseplayer = std::make_shared <BasePlayer>(localplayer->GetBasePlayer());
-	BaseLocalPlayer = std::make_shared <BasePlayer>(localplayer->GetBasePlayer());
+	auto handle = TargetProcess.CreateScatterHandle();
+	BaseLocalPlayer = std::make_shared <BasePlayer>(localplayer->GetBasePlayer(),handle);
+	TargetProcess.ExecuteReadScatter(handle);
+	TargetProcess.CloseScatterHandle(handle);
+	BaseLocalPlayer->InitializePlayerList();
+	handle = TargetProcess.CreateScatterHandle();
+	BaseLocalPlayer->CacheStage1(handle);
+	TargetProcess.ExecuteReadScatter(handle);
+	TargetProcess.CloseScatterHandle(handle);
+	Camera = std::make_shared <MainCamera>();
+	Sky = std::make_shared<TODSky>();
 }
 void SetupCvars()
 {
-	std::shared_ptr < OcclusionCulling> occlusionculling = std::make_shared <OcclusionCulling>();
-	if (AdminEsp)
+
+	std::shared_ptr<OcclusionCulling> occlusionculling = std::make_shared<OcclusionCulling>();
+	if (ConfigInstance.Misc.AdminESP)
 	{
 		occlusionculling->WriteDebugSettings(DebugFilter::Dynamic);
 		occlusionculling->WriteLayerMask(131072);
 	}
-	std::shared_ptr <MainCamera> maincamera = std::make_shared < MainCamera>();
-	std::shared_ptr <ConvarGraphics> convargraphics = std::make_shared <ConvarGraphics>();
-	if(ChangeFov)
-	convargraphics->WriteFOV(Fov);
-	std::shared_ptr <ConvarAdmin> convaradmin = std::make_shared <ConvarAdmin>();
-	convaradmin->ClearVisionInWater(true);
-	if(ChangeTime)
-	convaradmin->SetAdminTime(Time);
-	std::shared_ptr <ConsoleSystem> consolesystem = std::make_shared <ConsoleSystem>();
-	if (AdminFlag)
-		BaseLocalPlayer->WritePlayerFlag(PlayerFlags::IsAdmin);
+	else
+	{
+		occlusionculling->WriteDebugSettings(DebugFilter::Off);
+		occlusionculling->WriteLayerMask(0);
+	}
+	std::shared_ptr<ConvarAdmin> convaradmin = std::make_shared<ConvarAdmin>();
+	if (ConfigInstance.Misc.RemoveWaterEffect)
+		convaradmin->ClearVisionInWater(true);
+	if (ConfigInstance.Misc.ChangeTime)
+		convaradmin->SetAdminTime(ConfigInstance.Misc.Time);
+	else
+		convaradmin->SetAdminTime(-1);
+	std::shared_ptr<ConvarGraphics> graphics = std::make_shared<ConvarGraphics>();
+	if (ConfigInstance.Misc.ChangeFov)
+		graphics->WriteFOV(ConfigInstance.Misc.Fov);
+
+}
+std::shared_ptr<CheatFunction> CachePlayers = std::make_shared<CheatFunction>(2000, []() {
+		BaseLocalPlayer->CachePlayers();
+	});
+std::shared_ptr<CheatFunction> UpdateMovement = std::make_shared<CheatFunction>(38, []() {
+	if (ConfigInstance.Misc.SpiderMan)
+	{
+		auto handle = TargetProcess.CreateScatterHandle();
+		BaseLocalPlayer->GetBaseMovement()->WriteGroundAngleNew(handle, 0.f);
+		BaseLocalPlayer->GetBaseMovement()->WriteMaxAngleWalking(handle, 100.f);
+		BaseLocalPlayer->GetBaseMovement()->WriteGroundAngle(handle, 0.f);
+		TargetProcess.ExecuteScatterWrite(handle);
+		TargetProcess.CloseScatterHandle(handle);
+	}
+	});
+std::shared_ptr<CheatFunction> UpdateLocalPlayer = std::make_shared<CheatFunction>(300, []() {
+
+	if (ConfigInstance.Misc.NoRecoil)
+	{
+		BaseLocalPlayer->SetupBeltContainerList();
+	}
+
+	auto handle = TargetProcess.CreateScatterHandle();
+	BaseLocalPlayer->UpdateActiveItemID(handle);
+	BaseLocalPlayer->UpdateActiveFlag(handle);
+	TargetProcess.ExecuteReadScatter(handle);
+	TargetProcess.CloseScatterHandle(handle);
+
+	if (ConfigInstance.Misc.NoRecoil)
+	{
+		std::shared_ptr <Item> helditem = BaseLocalPlayer->GetActiveItem();
+		if (helditem != nullptr)
+		{
+			std::shared_ptr <BaseProjectile> weapon = helditem->GetBaseProjectile();
+			if (weapon->IsValidWeapon())
+			{
+				handle = TargetProcess.CreateScatterHandle();
+				weapon->WriteRecoilPitch(handle,helditem->GetItemID(),ConfigInstance.Misc.RecoilX);
+				weapon->WriteRecoilYaw(handle,helditem->GetItemID(), ConfigInstance.Misc.RecoilY);
+				TargetProcess.ExecuteScatterWrite(handle);
+				TargetProcess.CloseScatterHandle(handle);
+			}
+
+		}
+
+	}
+	
+	if (ConfigInstance.Misc.AdminFlag)
+	{
+		if ((BaseLocalPlayer->GetActiveFlag() & (int)4) != (int)4)
+		{
+			if (Console == nullptr)
+			{
+				Console = std::make_shared<ConsoleSystem>();
+
+			}
+			BaseLocalPlayer->WriteActiveFlag(BaseLocalPlayer->GetActiveFlag() + 4);
+		}
+	}
+	});
+std::shared_ptr<CheatFunction> SkyManager = std::make_shared<CheatFunction>(7, []() {
+	auto handle = TargetProcess.CreateScatterHandle();
+	if (ConfigInstance.Misc.BrightNights)
+	{
+		Sky->WriteNightLightIntensity(handle, 25.0f);
+		Sky->WriteNightAmbientMultiplier(handle, 4.0f);
+	}
+
+		if (ConfigInstance.Misc.BrightCaves)
+		{
+			Sky->WriteDayAmbientMultiplier(handle, 2.0f);
+
+		}
+		TargetProcess.ExecuteScatterWrite(handle);
+		TargetProcess.CloseScatterHandle(handle);
+	
+
+	});
+
+void Caching()
+{
+	if (BaseLocalPlayer->GetPlayerListSize() == 0)
+		return;
+	CachePlayers->Execute();
+	UpdateLocalPlayer->Execute();
+	SkyManager->Execute();
+	UpdateMovement->Execute();
 }
 void Intialize()
 {
@@ -63,111 +159,85 @@ void Intialize()
 		Intialize(); // wait till localplayer is valid.
 	}
 	SetupCvars();
-	MainThread();
-}
-std::shared_ptr <TODSky> TODSkyInstance;
-auto MainLoopScatter = TargetProcess.CreateScatterHandle();
-int ScatterCount = 0;
-std::shared_ptr<CheatFunction> SkyMods = std::make_shared<CheatFunction>(7, []() {
+	CachePlayers->Execute();
 	
-	//This needs to be done in a fast af loop, Heavily intensive
-	if (BrightNight)
-	{
-		ScatterCount++;
-		TODSkyInstance->WriteNightLightIntensity(MainLoopScatter,25.0f);
-		TODSkyInstance->WriteNightAmbientMultiplier(MainLoopScatter,4.0f);
-	}
-	if (BrightCaves)
-	{
-		ScatterCount++;
-		TODSkyInstance->WriteDayAmbientMultiplier(MainLoopScatter,2.0f);
-	}
-
-	});
-
-
-std::shared_ptr<CheatFunction> MovementMods = std::make_shared<CheatFunction>(50, []() {
-
-	if (SpiderMan)
-	{
-		ScatterCount++;
-		BaseLocalPlayer->GetBaseMovement()->WriteGroundAngle(MainLoopScatter, 0.0f);
-		BaseLocalPlayer->GetBaseMovement()->WriteGroundAngleNew(MainLoopScatter, 0.0f);
-		BaseLocalPlayer->GetBaseMovement()->WriteMaxAngleClimbing(MainLoopScatter, 999.0f);
-		BaseLocalPlayer->GetBaseMovement()->WriteMaxAngleWalking(MainLoopScatter, 999.0f);
-	}
-	});
-std::shared_ptr<CheatFunction> HotbarUpdater = std::make_shared<CheatFunction>(100, []() {
-
-	if (NoRecoil)
-		BaseLocalPlayer->UpdateActiveItemID(MainLoopScatter);// held weapon
-	});
-std::shared_ptr <BaseProjectile> CurrentWeapon = nullptr;
-std::shared_ptr<CheatFunction> WeaponMods = std::make_shared<CheatFunction>(100, []() {
-	if (NoRecoil)
-	{
-		BaseLocalPlayer->SetupBeltContainerList(); // this needs to be called to know the active item
-
-		std::shared_ptr <Item> helditem = BaseLocalPlayer->GetActiveItem();
-		if (helditem != nullptr)
-			CurrentWeapon = helditem->GetBaseProjectile();
-		if (CurrentWeapon != nullptr && helditem != nullptr)
-		{
-			if (CurrentWeapon->IsValidWeapon())
-			{
-				uint32_t itemid = helditem->GetItemID();
-				if (itemid != 0 && helditem != nullptr)
-				{
-
-					CurrentWeapon->WriteRecoilPitch(itemid, RecoilReduction);
-					CurrentWeapon->WriteRecoilYaw(itemid, RecoilReduction);
-				}
-			}
-		}
-	}
-	});
-void MainThread()
-{
-	TODSkyInstance = std::make_shared<TODSky>();
-	
-	while (true)
-	{
-	
-		MainLoopScatter = TargetProcess.CreateScatterHandle();
-		// spiderman
-		MovementMods->Execute();
-		HotbarUpdater->Execute();
-		SkyMods->Execute();
-		if(ScatterCount > 0)
-		TargetProcess.ExecuteScatterWrite(MainLoopScatter);
-		TargetProcess.CloseScatterHandle(MainLoopScatter);
-		ScatterCount = 0;
-		WeaponMods->Execute();
-		
-	}
 }
 void main()
 {
-	AllocConsole();
-	if (!TargetProcess.IsInitialized())
+	if (!TargetProcess.Init("RustClient.exe"))
 	{
-		DebugBreak();
-		std::printf("Unable To Connect To FPGA Device");
+		printf("Failed to initialize process\n");
+		return;
 	}
-	//is the PID valid?
-	if (!TargetProcess.GetPID())
-	{
-		std::printf("Game Isn't Open");
-		Sleep(1000);
-		TargetProcess = DMAHandler(L"RustClient.exe");
-	}
-	std::printf("PID: %X\n", TargetProcess.GetPID());
-	TargetProcess.FixDTB();
-	std::printf("Base Address: 0x%X\n", TargetProcess.GetBaseAddress());
-	std::printf("Game Assembly: 0x%X\n", TargetProcess.GetModuleAddress(L"GameAssembly.dll"));
-	std::printf("Unity Player: 0x%X\n", TargetProcess.GetModuleAddress(L"UnityPlayer.dll"));
-
+	TargetProcess.GetBaseAddress("GameAssembly.dll");
 	Intialize();
-	//BaseNetworkable* basenetworkable = new BaseNetworkable();
-	//basenetworkable->ItterateEntities();
+}
+LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	InputWndProc(hWnd, message, wParam, lParam);
+	switch (message)
+	{
+	case WM_DESTROY:
+		PostQuitMessage(0);
+		return 0;
+		break;
+	}
+
+	return DefWindowProc(hWnd, message, wParam, lParam);
+}
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+{
+	HWND hWnd;
+	WNDCLASSEX wc;
+	AllocConsole();
+	FILE* fDummy;
+	freopen_s(&fDummy, LIT("CONIN$"), LIT("r"), stdin);
+	freopen_s(&fDummy, LIT("CONOUT$"), LIT("w"), stderr);
+	freopen_s(&fDummy, LIT("CONOUT$"), LIT("w"), stdout);
+	printf(LIT("Debugging Window:\n"));
+	SetProcessDpiAwareness(PROCESS_PER_MONITOR_DPI_AWARE);
+	main();
+	ZeroMemory(&wc, sizeof(WNDCLASSEX));
+	wc.cbSize = sizeof(WNDCLASSEX);
+	wc.style = CS_HREDRAW | CS_VREDRAW;
+	wc.lpfnWndProc = WindowProc;
+	wc.hInstance = hInstance;
+	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+	wc.hbrBackground = (HBRUSH)COLOR_WINDOW;
+	wc.lpszClassName = L"GUI Framework";
+	RegisterClassEx(&wc);
+
+	hWnd = CreateWindowEx(WS_EX_APPWINDOW, wc.lpszClassName, L"GUI Framework",
+		WS_POPUP,
+		0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), NULL, NULL, hInstance, NULL);
+
+	if (!hWnd)
+		return -1;
+
+
+	SetLayeredWindowAttributes(hWnd, RGB(0, 0, 0), 255, LWA_ALPHA);
+
+	ShowWindow(hWnd, nCmdShow);
+
+	InitD2D(hWnd);
+	CreateGUI();
+	MSG msg;
+	SetProcessDPIAware();
+	SetInput();
+	while (TRUE)
+	{
+		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+
+			if (msg.message == WM_QUIT)
+				break;
+		}
+		Caching();
+		RenderFrame();
+
+	}
+	CleanD2D();
+	return msg.wParam;
 }
