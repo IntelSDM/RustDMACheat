@@ -65,7 +65,6 @@ class BasePlayer
 	Vector3 TransformPosition = Vector3::Zero();
 	uint64_t DisplayName = 0x938; // protected string _displayName;
 	uint64_t VisiblePlayerList = 0x20; // 	private static ListDictionary<ulong, global::BasePlayer> visiblePlayerList;
-	uint64_t ModelState = 0x810; // public ModelState modelState;
 	uint64_t DestroyedOffset = 0x38; // basentworkable ->private bool <IsDestroyed>k__BackingField;
 	uint32_t IsNPCOffset = 0x2C8; // 	private bool <IsNpc>k__BackingField;
 	std::shared_ptr<BaseMovement> BaseMovementInstance;
