@@ -15,7 +15,6 @@
 #include "Init.h"
 #include "GUI.h"
 std::shared_ptr<BasePlayer> BaseLocalPlayer = nullptr;
-void MainThread();
 bool SpiderMan = true;
 bool NoRecoil = true;
 int RecoilReduction = 25;
@@ -31,12 +30,15 @@ bool AdminEsp = true;
 void PerServerVariables()
 {
 	std::shared_ptr <LocalPlayer> localplayer = std::make_shared <LocalPlayer>();
-	std::shared_ptr <BasePlayer> baseplayer = std::make_shared <BasePlayer>(localplayer->GetBasePlayer());
-	BaseLocalPlayer = std::make_shared <BasePlayer>(localplayer->GetBasePlayer());
+	auto handle = TargetProcess.CreateScatterHandle();
+	BaseLocalPlayer = std::make_shared <BasePlayer>(localplayer->GetBasePlayer(),handle);
+	TargetProcess.ExecuteReadScatter(handle);
+	TargetProcess.CloseScatterHandle(handle);
+	BaseLocalPlayer->InitializePlayerList();
 }
 void SetupCvars()
 {
-	std::shared_ptr < OcclusionCulling> occlusionculling = std::make_shared <OcclusionCulling>();
+	/*std::shared_ptr < OcclusionCulling> occlusionculling = std::make_shared <OcclusionCulling>();
 	if (AdminEsp)
 	{
 		occlusionculling->WriteDebugSettings(DebugFilter::Dynamic);
@@ -52,7 +54,15 @@ void SetupCvars()
 	convaradmin->SetAdminTime(Time);
 	std::shared_ptr <ConsoleSystem> consolesystem = std::make_shared <ConsoleSystem>();
 	if (AdminFlag)
-		BaseLocalPlayer->WritePlayerFlag(PlayerFlags::IsAdmin);
+		BaseLocalPlayer->WritePlayerFlag(PlayerFlags::IsAdmin);*/
+}
+std::shared_ptr<CheatFunction> CachePlayers = std::make_shared<CheatFunction>(2000, []() {
+		BaseLocalPlayer->CachePlayers();
+	});
+void Caching()
+{
+	CachePlayers->Execute();
+
 }
 void Intialize()
 {
@@ -64,88 +74,8 @@ void Intialize()
 		Intialize(); // wait till localplayer is valid.
 	}
 	SetupCvars();
-	MainThread();
-}
-std::shared_ptr <TODSky> TODSkyInstance;
-auto MainLoopScatter = TargetProcess.CreateScatterHandle();
-int ScatterCount = 0;
-std::shared_ptr<CheatFunction> SkyMods = std::make_shared<CheatFunction>(7, []() {
+	CachePlayers->Execute();
 	
-	//This needs to be done in a fast af loop, Heavily intensive
-	if (BrightNight)
-	{
-		ScatterCount++;
-		TODSkyInstance->WriteNightLightIntensity(MainLoopScatter,25.0f);
-		TODSkyInstance->WriteNightAmbientMultiplier(MainLoopScatter,4.0f);
-	}
-	if (BrightCaves)
-	{
-		ScatterCount++;
-		TODSkyInstance->WriteDayAmbientMultiplier(MainLoopScatter,2.0f);
-	}
-
-	});
-
-
-std::shared_ptr<CheatFunction> MovementMods = std::make_shared<CheatFunction>(50, []() {
-
-	if (SpiderMan)
-	{
-		ScatterCount++;
-		BaseLocalPlayer->GetBaseMovement()->WriteGroundAngle(MainLoopScatter, 0.0f);
-		BaseLocalPlayer->GetBaseMovement()->WriteGroundAngleNew(MainLoopScatter, 0.0f);
-		BaseLocalPlayer->GetBaseMovement()->WriteMaxAngleClimbing(MainLoopScatter, 999.0f);
-		BaseLocalPlayer->GetBaseMovement()->WriteMaxAngleWalking(MainLoopScatter, 999.0f);
-	}
-	});
-std::shared_ptr<CheatFunction> HotbarUpdater = std::make_shared<CheatFunction>(100, []() {
-
-	if (NoRecoil)
-		BaseLocalPlayer->UpdateActiveItemID(MainLoopScatter);// held weapon
-	});
-std::shared_ptr <BaseProjectile> CurrentWeapon = nullptr;
-std::shared_ptr<CheatFunction> WeaponMods = std::make_shared<CheatFunction>(100, []() {
-	if (NoRecoil)
-	{
-		BaseLocalPlayer->SetupBeltContainerList(); // this needs to be called to know the active item
-
-		std::shared_ptr <Item> helditem = BaseLocalPlayer->GetActiveItem();
-		if (helditem != nullptr)
-			CurrentWeapon = helditem->GetBaseProjectile();
-		if (CurrentWeapon != nullptr && helditem != nullptr)
-		{
-			if (CurrentWeapon->IsValidWeapon())
-			{
-				uint32_t itemid = helditem->GetItemID();
-				if (itemid != 0 && helditem != nullptr)
-				{
-
-					CurrentWeapon->WriteRecoilPitch(itemid, RecoilReduction);
-					CurrentWeapon->WriteRecoilYaw(itemid, RecoilReduction);
-				}
-			}
-		}
-	}
-	});
-void MainThread()
-{
-	TODSkyInstance = std::make_shared<TODSky>();
-	
-	while (true)
-	{
-	
-		MainLoopScatter = TargetProcess.CreateScatterHandle();
-		// spiderman
-		MovementMods->Execute();
-		HotbarUpdater->Execute();
-		SkyMods->Execute();
-		if(ScatterCount > 0)
-		TargetProcess.ExecuteScatterWrite(MainLoopScatter);
-		TargetProcess.CloseScatterHandle(MainLoopScatter);
-		ScatterCount = 0;
-		WeaponMods->Execute();
-		
-	}
 }
 void main()
 {
@@ -155,6 +85,7 @@ void main()
 		return;
 	}
 	TargetProcess.GetBaseAddress("GameAssembly.dll");
+	Intialize();
 }
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -219,6 +150,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				break;
 		}
 		RenderFrame();
+		Caching();
 	}
 	CleanD2D();
 	return msg.wParam;

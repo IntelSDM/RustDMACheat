@@ -1,6 +1,7 @@
 #pragma once
 #include "BaseMovement.h"
 #include "Item.h"
+#include "Pch.h"
 enum class PlayerFlags : uint32_t
 {
 	Unused1 = 1,
@@ -30,14 +31,44 @@ enum class PlayerFlags : uint32_t
 	LoadingAfterTransfer = 33554432,
 	NoRespawnZone = 67108864
 };
-
+static enum StanceFlags : int
+{
+	Ducked = 1,
+	Jumped = 2,
+	OnGround = 4,
+	Sleeper = 8,
+	Sprinting = 16,
+	OnLadder = 32,
+	Flying = 64,
+	Aim = 128,
+	Prone = 256,
+	Mounted = 512,
+	Relax = 1024,
+	OnPhone = 2048,
+	Crawling = 4096
+};
 class BasePlayer
 {
+	/*
+	  "Address": 54626928,
+  "Name": "BasePlayer_TypeInfo",
+  "Signature": "BasePlayer_c*"
+*/
+	uint64_t StaticClass = 0x348E368;
 	uint64_t Class = 0;
 	uint64_t PlayerFlag = 0x8D8; // 	public global::BasePlayer.PlayerFlags playerFlags;
 	uint64_t BaseMovementOffset = 0x6A8; // public BaseMovement movement;
 	uint64_t PlayerInventory = 0x8E8; // public global::PlayerInventory inventory;
 	uint64_t ActiveItemIDOffset = 0x7E0; // private ItemId clActiveItem;
+	uint64_t PlayerModel = 0x680; //public PlayerModel playerModel;
+	uint64_t Position = 0x1b8;// PlayerModel -> internal Vector3 position;
+	Vector3 TransformPosition = Vector3::Zero();
+	uint64_t DisplayName = 0x938; // protected string _displayName;
+	uint64_t VisiblePlayerList = 0x20; // 	private static ListDictionary<ulong, global::BasePlayer> visiblePlayerList;
+	uint64_t ModelState = 0x810; // public ModelState modelState;
+	uint64_t DestroyedOffset = 0x38; // basentworkable ->private bool <IsDestroyed>k__BackingField;
+	uint32_t IsNPCOffset = 0x2C8; // 	private bool <IsNpc>k__BackingField;
+	uint64_t PoseType = 0x20; // ModelState -> public int flags;
 	std::shared_ptr<BaseMovement> BaseMovementInstance;
 
 
@@ -48,12 +79,17 @@ class BasePlayer
 	uint64_t ItemList = 0x40; // ItemContainer -> 	public List<global::Item> itemList;
 	uint64_t ItemListContents = 0x10; // ItemList + 0x10 is the actual contents of the c# list
 	uint64_t ItemListSize = 0x18; // ItemList + 0x18 is the size of a c# list
-
+	std::vector<std::shared_ptr<BasePlayer>> PlayerList;
 	std::vector<std::shared_ptr<Item>> BeltContainerList;
-	
+	int PlayerListSize = 0;
+	wchar_t PlayerName[36] = { '\0' };
+
+	bool Destroyed = false;
+	bool NPC = false;
+	int Pose = 0;
 
 public:
-	BasePlayer(uint64_t address);
+	BasePlayer(uint64_t address, VMMDLL_SCATTER_HANDLE handle);
 	~BasePlayer();
 	PlayerFlags GetPlayerFlag();
 	void WritePlayerFlag(PlayerFlags flag);
@@ -64,4 +100,11 @@ public:
 	std::shared_ptr<Item> GetActiveItem();
 	bool IsPlayerValid();
 	void SetupBeltContainerList();
+	void InitializePlayerList();
+	void CachePlayers();
+	int GetPlayerListSize();
+	void CacheStage1(VMMDLL_SCATTER_HANDLE handle);
+	bool IsSleeping();
+	bool IsNPC();
+	std::wstring GetName();
 };
