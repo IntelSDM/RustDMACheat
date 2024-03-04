@@ -3,7 +3,8 @@
 #include "drawing.h"
 #include "GUI.h"
 #include "Globals.h"
-//#include "PlayerEsp.h"
+#include "Visuals.h"
+#include "PlayerEsp.h"
 ID2D1Factory* Factory;
 IDWriteFactory* FontFactory;
 ID2D1HwndRenderTarget* RenderTarget;
@@ -29,12 +30,11 @@ void InitD2D(HWND hWnd)
 		return;
 
 	CreateFonts(LIT("Verdana"), LIT(L"Verdana"), 10, DWRITE_FONT_WEIGHT_NORMAL);
-	CreateFonts("VerdanaBold", LIT(L"Verdana"), 10, DWRITE_FONT_WEIGHT_SEMI_BOLD);
 	RenderTarget->CreateSolidColorBrush(D2D1::ColorF(0, 0, 0, 0), &Brush); // create global brush
 	RenderTarget->SetTextAntialiasMode(D2D1_TEXT_ANTIALIAS_MODE_GRAYSCALE); // set aa mode
 }
 std::shared_ptr<CheatFunction> UpdateViewMatrix = std::make_shared<CheatFunction>(5, []() {
-	//Camera->UpdateViewMatrix();
+	RefreshViewMatrix();
 	});
 
 void CleanD2D()
@@ -88,40 +88,20 @@ int FrameRate()
 	return lastfps;
 }
 
-void InitialiseClasses()
-{
-	//BasePlayer = std::make_shared<PlayerNetwork>(0);
-//	Camera = std::make_shared<MainCamera>();
-	//BasePlayer->InitializePlayerList();
-}
 
-std::shared_ptr<CheatFunction> Cache = std::make_shared<CheatFunction>(1000, [] {
-//	BasePlayer->CachePlayers();
-
-	});
 
 
 void RenderFrame()
 {
 
-/*	if (BasePlayer == nullptr)
-	{
-		InitialiseClasses();
-		Sleep(1000);
-	}
-	if (BasePlayer->PlayerList.size() == 0)
-	{
-		InitialiseClasses();
-		Cache->Execute();
-		Sleep(1000);
-	}*/
+	if (BaseLocalPlayer->GetPlayerListSize() == 0)
+		return;
 	UpdateViewMatrix->Execute();
-	Cache->Execute();
-	//UpdatePlayers->Execute();
+	UpdatePlayers->Execute();
 	RenderTarget->BeginDraw();
 	RenderTarget->Clear(Colour(0, 0, 0, 255)); // clear over the last buffer
 	RenderTarget->SetTransform(D2D1::Matrix3x2F::Identity()); // set new transform
-//	DrawPlayers();
+	DrawPlayers();
 	Render();
 	RenderTarget->EndDraw();
 }

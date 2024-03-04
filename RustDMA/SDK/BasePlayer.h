@@ -91,6 +91,7 @@ class BasePlayer
 public:
 	BasePlayer(uint64_t address, VMMDLL_SCATTER_HANDLE handle);
 	~BasePlayer();
+	uint64_t GetClass();
 	PlayerFlags GetPlayerFlag();
 	void WritePlayerFlag(PlayerFlags flag);
 	std::shared_ptr<BaseMovement> GetBaseMovement();
@@ -107,4 +108,8 @@ public:
 	bool IsSleeping();
 	bool IsNPC();
 	std::wstring GetName();
+	std::vector<std::shared_ptr<BasePlayer>> GetPlayerList();
+	void UpdatePosition(VMMDLL_SCATTER_HANDLE handle);
+	void UpdateDestroyed(VMMDLL_SCATTER_HANDLE handle);
+	Vector3 GetPosition();
 };

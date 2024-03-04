@@ -167,6 +167,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Esp\PlayerEsp.cpp" />
+    <ClCompile Include="Esp\Visuals.cpp" />
     <ClCompile Include="Graphics\Drawing.cpp" />
     <ClCompile Include="Graphics\Entities\Button.cpp" />
     <ClCompile Include="Graphics\Entities\ColourPicker.cpp" />
@@ -209,6 +211,9 @@
   <ItemGroup>
     <ClInclude Include="Config\ConfigInstance.h" />
     <ClInclude Include="Config\Misc.h" />
+    <ClInclude Include="Config\PlayerEspConfig.h" />
+    <ClInclude Include="Esp\PlayerEsp.h" />
+    <ClInclude Include="Esp\Visuals.h" />
     <ClInclude Include="Graphics\Drawing.h" />
     <ClInclude Include="Graphics\Entities\Button.h" />
     <ClInclude Include="Graphics\Entities\ColourPicker.h" />

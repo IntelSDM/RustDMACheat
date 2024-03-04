@@ -28,9 +28,19 @@ D2D1::ColorF ColourPick = Colour(0, 150, 255, 255);
 void CreateGUI()
 {
 	MenuEntity = std::make_shared<Container>();
-	auto form = std::make_shared<Form>(100, 100.0f, 300, 200, 2, 30, LIT(L"Cool Hack"), false);
+	auto form = std::make_shared<Form>(100, 100.0f, 400, 300, 2, 30, LIT(L"Cool Hack"), false);
 	{
-	
+	auto enableplayeresp = std::make_shared<Toggle>(10, 10, LIT(L"Enable Player ESP"), &ConfigInstance.PlayerESP.Enable);
+	form->Push(enableplayeresp);
+	auto playercolour = std::make_shared<ColourPicker>(150, 10, &ConfigInstance.PlayerESP.Colour);
+	form->Push(playercolour);
+	auto playername = std::make_shared<Toggle>(10, 30, LIT(L"Player Name"), &ConfigInstance.PlayerESP.Name);
+	form->Push(playername);
+	auto playerdistance = std::make_shared<Toggle>(10, 50, LIT(L"Player Distance"), &ConfigInstance.PlayerESP.Distance);
+	form->Push(playerdistance);
+	auto playermaxdistance = std::make_shared<Slider<int>>(10, 70,150, LIT(L"Max Distance"),LIT(L"m"), 0, 1000, &ConfigInstance.PlayerESP.MaxDistance);
+	form->Push(playermaxdistance);
+
 
 
 

@@ -15,6 +15,7 @@
 #include "Init.h"
 #include "GUI.h"
 std::shared_ptr<BasePlayer> BaseLocalPlayer = nullptr;
+std::shared_ptr<MainCamera> Camera = nullptr;
 bool SpiderMan = true;
 bool NoRecoil = true;
 int RecoilReduction = 25;
@@ -35,6 +36,7 @@ void PerServerVariables()
 	TargetProcess.ExecuteReadScatter(handle);
 	TargetProcess.CloseScatterHandle(handle);
 	BaseLocalPlayer->InitializePlayerList();
+	Camera = std::make_shared <MainCamera>();
 }
 void SetupCvars()
 {
@@ -59,10 +61,11 @@ void SetupCvars()
 std::shared_ptr<CheatFunction> CachePlayers = std::make_shared<CheatFunction>(2000, []() {
 		BaseLocalPlayer->CachePlayers();
 	});
+
 void Caching()
 {
 	CachePlayers->Execute();
-
+	
 }
 void Intialize()
 {
@@ -149,8 +152,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			if (msg.message == WM_QUIT)
 				break;
 		}
-		RenderFrame();
 		Caching();
+		RenderFrame();
+
 	}
 	CleanD2D();
 	return msg.wParam;

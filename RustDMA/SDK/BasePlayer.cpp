@@ -57,7 +57,6 @@ void BasePlayer::CachePlayers()
 	TargetProcess.CloseScatterHandle(handle);
 
 	PlayerListSize = size;
-	printf("[BasePlayer] PlayerListSize: %d\n", size);
 	if (size == 0 || buffer == 0)
 		return;
 	std::vector<uint64_t> playerlist;
@@ -100,7 +99,6 @@ PlayerFlags BasePlayer::GetPlayerFlag()
 	if (!IsPlayerValid())
 		return PlayerFlags::Connected;
 	PlayerFlags flag = TargetProcess.Read<PlayerFlags>(Class + PlayerFlag);
-	printf("[BasePlayer] PlayerFlag: %d\n", flag);
 	return flag;
 }
 void BasePlayer::WritePlayerFlag(PlayerFlags flag)
@@ -186,7 +184,7 @@ std::shared_ptr<Item> BasePlayer::GetActiveItem()
 
 bool BasePlayer::IsPlayerValid()
 {
-	return Class != 0 && BaseMovementOffset != 0 && PlayerInventory !=0;
+	return Class != 0 && PlayerInventory != 0;
 }
 
 bool BasePlayer::IsSleeping()
@@ -208,4 +206,24 @@ std::wstring BasePlayer::GetName()
 	return std::wstring(PlayerName);
 	else
 		return std::wstring(LIT(L"Scientist"));
+}
+std::vector<std::shared_ptr<BasePlayer>> BasePlayer::GetPlayerList()
+{
+	return PlayerList;
+}
+uint64_t BasePlayer::GetClass()
+{
+	return Class;
+}
+void BasePlayer::UpdatePosition(VMMDLL_SCATTER_HANDLE handle)
+{
+	TargetProcess.AddScatterReadRequest(handle, PlayerModel + Position, reinterpret_cast<void*>(&TransformPosition), sizeof(Vector3));
+}
+void BasePlayer::UpdateDestroyed(VMMDLL_SCATTER_HANDLE handle)
+{
+	TargetProcess.AddScatterReadRequest(handle, Class + DestroyedOffset, reinterpret_cast<void*>(&Destroyed), sizeof(bool));
+}
+Vector3 BasePlayer::GetPosition()
+{
+	return TransformPosition;
 }
