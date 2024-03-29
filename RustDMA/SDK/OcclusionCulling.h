@@ -16,7 +16,7 @@ class OcclusionCulling
       "Name": "OcclusionCulling_TypeInfo",
       "Signature": "OcclusionCulling_c*"
 	*/
-	uint64_t Class = 0x39D35A0;
+	uint64_t Class = 0x39D47B8;
 	// Dump.cs/dummy dll
 	uint64_t StaticField = 0xB8;// Static Padding To Access Static Fields
 	uint64_t Instance = 0x70; // 	private static OcclusionCulling instance;

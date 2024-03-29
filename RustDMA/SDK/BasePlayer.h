@@ -29,7 +29,8 @@ enum class PlayerFlags : uint32_t
 	VoiceRangeBoost = 8388608,
 	ModifyClan = 16777216,
 	LoadingAfterTransfer = 33554432,
-	NoRespawnZone = 67108864
+	NoRespawnZone = 67108864,
+	IsInTutorial = 134217728
 };
 static enum StanceFlags : int
 {
@@ -45,7 +46,10 @@ static enum StanceFlags : int
 	Mounted = 512,
 	Relax = 1024,
 	OnPhone = 2048,
-	Crawling = 4096
+	Crawling = 4096,
+	Loading = 8192,
+	HeadLook = 16384,
+	HasParachute = 32768
 };
 class BasePlayer
 {
@@ -54,7 +58,7 @@ class BasePlayer
   "Name": "BasePlayer_TypeInfo",
   "Signature": "BasePlayer_c*"
 */
-	uint64_t StaticClass = 0x39DB448;
+	uint64_t StaticClass = 0x39DC588;
 	uint64_t Class = 0;
 	uint64_t PlayerFlag = 0x8F0; // 	public global::BasePlayer.PlayerFlags playerFlags;
 	uint64_t BaseMovementOffset = 0x6B8; // public BaseMovement movement;
@@ -65,7 +69,7 @@ class BasePlayer
 	Vector3 TransformPosition = Vector3::Zero();
 	uint64_t DisplayName = 0x950; // protected string _displayName;
 	uint64_t VisiblePlayerList = 0x20; // 	private static ListDictionary<ulong, BasePlayer> visiblePlayerList; visiblePlayerList;
-	uint64_t DestroyedOffset = 0x38; // basentworkable ->private bool <IsDestroyed>k__BackingField;
+	uint64_t DestroyedOffset = 0x38; // basenetworkable ->private bool <IsDestroyed>k__BackingField;
 	uint32_t IsNPCOffset = 0x2C8; // 	private bool <IsNpc>k__BackingField;
 	std::shared_ptr<BaseMovement> BaseMovementInstance;
 
