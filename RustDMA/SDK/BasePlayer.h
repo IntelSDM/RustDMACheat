@@ -58,19 +58,19 @@ class BasePlayer
   "Name": "BasePlayer_TypeInfo",
   "Signature": "BasePlayer_c*"
 */
-	uint64_t StaticClass = 0x39DC588;
+	uint64_t StaticClass = 0x3AA8140;
 	uint64_t Class = 0;
 	uint64_t PlayerFlag = 0x8F0; // 	public global::BasePlayer.PlayerFlags playerFlags;
 	uint64_t BaseMovementOffset = 0x6B8; // public BaseMovement movement;
 	uint64_t PlayerInventory = 0x900; // public global::PlayerInventory inventory;
 	uint64_t ActiveItemIDOffset = 0x7F0; // private ItemId clActiveItem;
 	uint64_t PlayerModel = 0x690; //public PlayerModel playerModel;
-	uint64_t Position = 0x1B8;// PlayerModel -> internal Vector3 position;
+	uint64_t Position = 0x1C0;// PlayerModel -> internal Vector3 position;
 	Vector3 TransformPosition = Vector3::Zero();
 	uint64_t DisplayName = 0x950; // protected string _displayName;
-	uint64_t VisiblePlayerList = 0x20; // 	private static ListDictionary<ulong, BasePlayer> visiblePlayerList; visiblePlayerList;
+	uint64_t VisiblePlayerList = 0x20; // 	private static ListDictionary<ulong, BasePlayer> visiblePlayerList;
 	uint64_t DestroyedOffset = 0x38; // basenetworkable ->private bool <IsDestroyed>k__BackingField;
-	uint32_t IsNPCOffset = 0x2C8; // 	private bool <IsNpc>k__BackingField;
+	uint32_t IsNPCOffset = 0x2D0; // 	private bool <IsNpc>k__BackingField;
 	std::shared_ptr<BaseMovement> BaseMovementInstance;
 
 
