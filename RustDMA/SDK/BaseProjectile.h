@@ -5,7 +5,7 @@ class BaseProjectile
 	uint64_t RecoilProperties = 0x2F0; //	public RecoilProperties recoil;
 
 	// Part of  RecoilProperties
-	uint64_t RecoilOverride = 0x80; //	public RecoilProperties newRecoilOverride;
+	uint64_t RecoilOverride = 0x80; // RecoilProperties-> public RecoilProperties newRecoilOverride;
 	uint64_t RecoilYawMin = 0x18; // RecoilProperties-> public float recoilYawMin;
 	uint64_t RecoilYawMax = 0x1C; //  RecoilProperties-> public float recoilYawMax;
 	uint64_t RecoilPitchMin = 0x20; // RecoilProperties-> public float recoilPitchMin;

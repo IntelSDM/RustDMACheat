@@ -12,7 +12,7 @@ MainCamera::MainCamera()
 	this->Camera = TargetProcess.Read<uint64_t>(StaticField + Camera); // Current MainCamera
 	printf("[MainCamera] Camera: 0x%llX\n", Camera);
 	this->CameraGameObject = TargetProcess.Read<uint64_t>(Camera + CameraGameObject); // get the native gameobject
-	printf("[MainCamera] CameraGamoObject: 0x%llX\n", CameraGameObject);
+	printf("[MainCamera] CameraGameObject: 0x%llX\n", CameraGameObject);
 }
 
 ViewMatrix MainCamera::GetViewMatrix()
