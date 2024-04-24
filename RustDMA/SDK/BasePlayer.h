@@ -58,26 +58,26 @@ class BasePlayer
   "Name": "BasePlayer_TypeInfo",
   "Signature": "BasePlayer_c*"
 */
-	uint64_t StaticClass = 0x3AA8150;
+	uint64_t StaticClass = 0x3ACFD90;
 	uint64_t Class = 0;
-	uint64_t PlayerFlag = 0x8F0; // 	public global::BasePlayer.PlayerFlags playerFlags;
-	uint64_t BaseMovementOffset = 0x6B8; // public BaseMovement movement;
-	uint64_t PlayerInventory = 0x900; // public global::PlayerInventory inventory;
-	uint64_t ActiveItemIDOffset = 0x7F0; // private ItemId clActiveItem;
-	uint64_t PlayerModel = 0x690; //public PlayerModel playerModel;
-	uint64_t Position = 0x1C0;// PlayerModel -> internal Vector3 position;
+	uint64_t PlayerFlag = 0x8F8; // 	public global::BasePlayer.PlayerFlags playerFlags;
+	uint64_t BaseMovementOffset = 0x6C0; // public BaseMovement movement;
+	uint64_t PlayerInventory = 0x908; // public global::PlayerInventory inventory;
+	uint64_t ActiveItemIDOffset = 0x7F8; // private ItemId clActiveItem;
+	uint64_t PlayerModel = 0x698; //public PlayerModel playerModel;
+	uint64_t Position = 0x1C8;// PlayerModel -> internal Vector3 position;
 	Vector3 TransformPosition = Vector3::Zero();
-	uint64_t DisplayName = 0x950; // protected string _displayName;
-	uint64_t VisiblePlayerList = 0x20; // 	private static ListDictionary<ulong, BasePlayer> visiblePlayerList;
-	uint64_t DestroyedOffset = 0x38; // basenetworkable ->private bool <IsDestroyed>k__BackingField;
-	uint32_t IsNPCOffset = 0x2D0; // 	private bool <IsNpc>k__BackingField;
+	uint64_t DisplayName = 0x958; // protected string _displayName;
+	uint64_t VisiblePlayerList = 0x20; // 	private static ListDictionary<ulong, global::BasePlayer> visiblePlayerList;
+	uint64_t DestroyedOffset = 0x40; // basenetworkable -> private bool <IsDestroyed>k__BackingField;
+	uint32_t IsNPCOffset = 0x2D8; // 	private bool <IsNpc>k__BackingField;
 	std::shared_ptr<BaseMovement> BaseMovementInstance;
 
 
 	uint32_t ActiveItemID = 0;
 
 	// these are offsets outside of baseplayer. I just don't want the hassle of 1000 classes. The Class is before the "->"
-	uint64_t ContainerBelt = 0x28; // PlayerInventory -> public global::ItemContainer containerBelt;
+	uint64_t ContainerBelt = 0x30; // PlayerInventory -> public global::ItemContainer containerBelt;
 	uint64_t ItemList = 0x40; // ItemContainer -> 	public List<global::Item> itemList;
 	uint64_t ItemListContents = 0x10; // ItemList + 0x10 is the actual contents of the c# list
 	uint64_t ItemListSize = 0x18; // ItemList + 0x18 is the size of a c# list

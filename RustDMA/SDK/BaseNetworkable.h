@@ -7,11 +7,11 @@ class BaseNetworkable
       "Name": "System.Collections.Generic.List\u003CBaseGameMode\u003E_TypeInfo",
       "Signature": "System_Collections_Generic_List_BaseGameMode__c*"
 	*/
-	uint64_t Class = 0x3AE1138;
+	uint64_t Class = 0x3AFFE78;
 	//Dump.cs / DummyDLL
 	uint64_t StaticField = 0xB8;// Static Padding To Access Static Fields
 	uint64_t ClientEntities = 0x0; // public static global::BaseNetworkable.EntityRealm clientEntities;
-	uint64_t EntityList = 0x10; // private ListDictionary<NetworkableId, BaseNetworkable> entityList;
+	uint64_t EntityList = 0x10; // private ListDictionary<NetworkableId, global::BaseNetworkable> entityList;
 
 	//These next two are a little tricky and you will require dump.cs
 	//il2cpp dumper cant retrieve these offsets since they depend on what they are instantiated with
