@@ -6,10 +6,10 @@ class TODSky // class TOD_Sky
       "Name": "TOD_Sky_TypeInfo",
       "Signature": "TOD_Sky_c*"
 	*/
-	uint64_t Class = 0x3A550F8;
+	uint64_t Class = 0x3A8D358;
 	uint64_t StaticField = 0xB8;
-	uint64_t NightParameters = 0x58; // public TOD_NightParameters Night;
-	uint64_t DayParameters = 0x50; // 	public TOD_DayParameters Day;
+	uint64_t NightParameters = 0x60; // public TOD_NightParameters Night;
+	uint64_t DayParameters = 0x58; // 	public TOD_DayParameters Day;
 	uint64_t Instance = 0;
 	uint64_t AmbientMultiplierDay = 0x50; // TOD_NightParameters -> public float AmbientMultiplier;
 	uint64_t AmbientMultiplierNight = 0x50; // TOD_NightParameters -> public float AmbientMultiplier;

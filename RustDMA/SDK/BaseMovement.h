@@ -2,13 +2,13 @@
 class BaseMovement
 {
 	uint64_t Class = 0x0;
-	uint64_t GroundAngle = 0xC4; // private float groundAngle;
-	uint64_t GroundAngleNew = 0xC8; //private float groundAngleNew;
-	uint64_t MaxAngleClimbing = 0x90; //public float maxAngleClimbing;
-	uint64_t MaxAngleWalking = 0x8c; //public float maxAngleWalking;
-	uint64_t GroundTime = 0xCC; // 	private float groundTime;
-	uint64_t JumpTime = 0xD0; //private float jumpTime;
-	uint64_t LandTime = 0xD4; //private float landTime;
+	uint64_t GroundAngle = 0xCC; // private float groundAngle;
+	uint64_t GroundAngleNew = 0xD0; //private float groundAngleNew;
+	uint64_t MaxAngleClimbing = 0x98; //public float maxAngleClimbing;
+	uint64_t MaxAngleWalking = 0x94; //public float maxAngleWalking;
+	uint64_t GroundTime = 0xD4; // 	private float groundTime;
+	uint64_t JumpTime = 0xD8; //private float jumpTime;
+	uint64_t LandTime = 0xDC; //private float landTime;
 public:
 	BaseMovement(uint64_t address);
 	float GetGroundAngle();
