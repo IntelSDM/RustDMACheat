@@ -58,16 +58,16 @@ class BasePlayer
   "Name": "BasePlayer_TypeInfo",
   "Signature": "BasePlayer_c*"
 */
-	uint64_t StaticClass = 0x3ACFD90;
+	uint64_t StaticClass = 0x3B4EB50;
 	uint64_t Class = 0;
-	uint64_t PlayerFlag = 0x8F8; // 	public global::BasePlayer.PlayerFlags playerFlags;
-	uint64_t BaseMovementOffset = 0x6C0; // public BaseMovement movement;
-	uint64_t PlayerInventory = 0x908; // public global::PlayerInventory inventory;
-	uint64_t ActiveItemIDOffset = 0x7F8; // private ItemId clActiveItem;
-	uint64_t PlayerModel = 0x698; //public PlayerModel playerModel;
+	uint64_t PlayerFlag = 0x7F8; // 	public global::BasePlayer.PlayerFlags playerFlags;
+	uint64_t BaseMovementOffset = 0x5C0; // public BaseMovement movement;
+	uint64_t PlayerInventory = 0x808; // public global::PlayerInventory inventory;
+	uint64_t ActiveItemIDOffset = 0x6F8; // private ItemId clActiveItem;
+	uint64_t PlayerModel = 0x598; //public PlayerModel playerModel;
 	uint64_t Position = 0x1C8;// PlayerModel -> internal Vector3 position;
 	Vector3 TransformPosition = Vector3::Zero();
-	uint64_t DisplayName = 0x958; // protected string _displayName;
+	uint64_t DisplayName = 0x858; // protected string _displayName;
 	uint64_t VisiblePlayerList = 0x20; // 	private static ListDictionary<ulong, global::BasePlayer> visiblePlayerList;
 	uint64_t DestroyedOffset = 0x40; // basenetworkable -> private bool <IsDestroyed>k__BackingField;
 	uint32_t IsNPCOffset = 0x2D8; // 	private bool <IsNpc>k__BackingField;
