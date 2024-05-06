@@ -690,7 +690,7 @@ uint64_t Memory::FindSignature(const char* signature, uint64_t range_start, uint
 bool Memory::Write(uintptr_t address, void* buffer, size_t size) const
 {
 	if (!(address > 0x2000000 && address < 0x7FFFFFFFFFFF))
-		return;
+		return false;
 	if (!VMMDLL_MemWrite(this->vHandle, this->current_process.PID, address, (PBYTE)buffer, size))
 	{
 		LOG("[!] Failed to write Memory at 0x%p\n", address);
@@ -702,7 +702,7 @@ bool Memory::Write(uintptr_t address, void* buffer, size_t size) const
 bool Memory::Write(uintptr_t address, void* buffer, size_t size, int pid) const
 {
 	if (!(address > 0x2000000 && address < 0x7FFFFFFFFFFF))
-		return;
+		return false;
 	if (!VMMDLL_MemWrite(this->vHandle, pid, address, (PBYTE)buffer, size))
 	{
 		LOG("[!] Failed to write Memory at 0x%p\n", address);
