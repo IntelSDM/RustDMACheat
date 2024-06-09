@@ -7,7 +7,7 @@ class BaseNetworkable
       "Name": "System.Collections.Generic.List\u003CBaseGameMode\u003E_TypeInfo",
       "Signature": "System_Collections_Generic_List_BaseGameMode__c*"
 	*/
-	uint64_t Class = 0x3B7F130;
+	uint64_t Class = 0x3C58568;
 	//Dump.cs / DummyDLL
 	uint64_t StaticField = 0xB8;// Static Padding To Access Static Fields
 	uint64_t ClientEntities = 0x0; // public static global::BaseNetworkable.EntityRealm clientEntities;
