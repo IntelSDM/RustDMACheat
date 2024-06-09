@@ -7,7 +7,7 @@ class ConsoleSystem
       "Name": "ConsoleSystem.Index_TypeInfo",
       "Signature": "ConsoleSystem_Index_c*"
 	*/
-    uint64_t Class = 0x3B4C448;
+    uint64_t Class = 0x3C28130;
     //Dump.cs / DummyDLL
     uint64_t StaticField = 0xB8;// Static Padding To Access Static Fields
     uint64_t AllBackingField = 0x10; //private static ConsoleSystem.Command[] <All>k__BackingField;

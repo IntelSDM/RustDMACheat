@@ -2,7 +2,7 @@
 class BaseProjectile
 {
 	uint64_t Class = 0x0;
-	uint64_t RecoilProperties = 0x2F8; //	public RecoilProperties recoil;
+	uint64_t RecoilProperties = 0x300; //	public RecoilProperties recoil;
 
 	// Part of  RecoilProperties
 	uint64_t RecoilOverride = 0x80; // RecoilProperties-> public RecoilProperties newRecoilOverride;
