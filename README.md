@@ -1,7 +1,7 @@
 # Rust DMA Cheat
 A little DMA cheat for Rust. Some basic functions. A basic and easy to update SDK. <br><br>
 <i>As Facepunch are claiming to take a heavier stance against content that infringes upon their copyright; I have removed the images of the cheat from the repo. It no longer contains any media from their game, therefore no more copyrighted material.<br>
-The only code in this repo is from the credited parties. 
+The entirety of the code in this repo is from the credited parties. 
 </i>
 
 ## Showcase
